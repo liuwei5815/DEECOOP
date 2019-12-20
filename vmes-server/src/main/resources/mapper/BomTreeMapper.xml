@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：操作日志 Mapper.xml
+创建人：刘威 自动创建
+创建时间：2018-09-30
+ -->
+<mapper namespace="com.xy.vmes.deecoop.base.dao.BomTreeMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_bom_tree
+    </sql>
+
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+		bom_id bomId,<!-- vmes_bom id -->
+		prod_id prodId,<!-- 产品id -->
+		parent_prod_id parentProdId,<!-- 上级产品id -->
+		layer layer,<!-- 级别 -->
+		ratio ratio,<!-- 用料比例 -->
+		cuser cuser,<!-- 创建用户id -->
+		cdate cdate,<!-- 创建时间 -->
+		uuser uuser,<!-- 修改用户id -->
+		udate udate,<!-- 修改时间 -->
+		isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+		remark remark,<!-- 备注 -->
+		path_id pathId,<!-- 路径 -->
+		id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{bomId},<!-- vmes_bom id -->
+		#{prodId},<!-- 产品id -->
+		#{parentProdId},<!-- 上级产品id -->
+		#{layer},<!-- 级别 -->
+		#{ratio},<!-- 用料比例 -->
+		#{cuser},<!-- 创建用户id -->
+		#{cdate},<!-- 创建时间 -->
+		#{uuser},<!-- 修改用户id -->
+		#{udate},<!-- 修改时间 -->
+		#{isdisable},<!-- 是否启用(0:已禁用 1:启用) -->
+		#{remark},<!-- 备注 -->
+		#{pathId},<!-- 路径 -->
+		#{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段名称  '_hide' 表示前端列表隐藏 自动创建，禁止修改-->
+    <sql id="Column">
+        'vmes_bom id'  bomId,
+        '产品id'  prodId,
+        '上级产品id'  parentProdId,
+        '级别'  layer,
+        '用料比例'  ratio,
+        '创建用户id'  cuser,
+        '创建时间'  cdate,
+        '修改用户id'  uuser,
+        '修改时间'  udate,
+        '是否启用(0:已禁用 1:启用)'  isdisable,
+        '备注'  remark,
+        '路径'  pathId,
+        'id' id_hide
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.BomTree">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        <include refid="tableName"></include>
+        set isdisable = '0' ,udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'BomTree' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+            (replace(uuid(), '-', ''),'BomTree','code','编码',1, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','name','名称',2, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','spec','规格型号',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','genre','属性ID',4, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','genreName','属性',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','unit','计量单位ID',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','unitName','计量单位',7, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','type','类型ID',8, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','typeName','类型',9, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','bomId','vmes_bom id',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','prodId','产品id',12, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','parentProdId','上级产品id',13, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','layer','级别',14, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','ratio','单件用量',15, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','cuser','创建用户id',16, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','cdate','创建时间',17, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','uuser','修改用户id',18, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','udate','修改时间',19, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','isdisable','是否启用',20, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','remark','备注',21, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','pathId','路径',22, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','isreplaceable','是否可替代物',23, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','childrenNum','子节点数量',24, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTree','id','id',0, '1','0','1','0',now(), 'admin')
+
+
+            delete from vmes_column where model_code = 'BomTreeProduct' ;
+            insert into vmes_column (
+            id,model_code,title_key,title_name,serial_number,
+            isdisable,ishide,isedit,ismust,cdate,
+            cuser
+            ) VALUES
+            (replace(uuid(), '-', ''),'BomTreeProduct','code','产品编码',1, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','name','产品名称',2, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','spec','规格型号',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','genre','产品属性',4, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','unit','计量单位',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','ratio','物料用量',6, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','sumRatio','产品转化用量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','splitCount','拆分数量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','planCount','计划数量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','stockCount','库存数量',7, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','assembledCount','可组装数量',8, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','maxCount','最大可生产数量',9, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','expectCount','期望生产数量',10, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','lackCount','缺少数量',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','bomId','vmes_bom id',12, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','bomTreeId','产品BomTreeId',13, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','pid','上级产品id',14, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','layer','级别',15, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','cuser','创建用户id',16, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','cdate','创建时间',17, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','uuser','修改用户id',18, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','udate','修改时间',19, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','isdisable','是否启用',20, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','remark','备注',21, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','pathId','路径',22, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','edate','期望到货日期',23, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProduct','id','id',0, '1','0','1','0',now(), 'admin')
+
+
+            delete from vmes_column where model_code = 'BomTreeProductChildren' ;
+            insert into vmes_column (
+            id,model_code,title_key,title_name,serial_number,
+            isdisable,ishide,isedit,ismust,cdate,
+            cuser
+            ) VALUES
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','code','物料编码',1, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','name','物料名称',2, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','spec','规格型号',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','genre','产品属性',4, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','unit','计量单位',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','ratio','物料用量',6, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','upRatio','产品转化用量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','splitCount','拆分数量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','planCount','计划数量',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','stockCount','库存数量',7, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','assembledCount','可组装数量',8, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','maxCount','总数量',9, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','expectCount','需要数量',10, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','lackCount','缺少数量',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','bomId','vmes_bom id',12, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','bomTreeId','产品BomTreeId',13, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','pid','上级产品id',14, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','layer','级别',15, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','cuser','创建用户id',16, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','cdate','创建时间',17, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','uuser','修改用户id',18, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','udate','修改时间',19, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','isdisable','是否启用',20, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','remark','备注',21, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','pathId','路径',22, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','edate','期望到货日期',23, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'BomTreeProductChildren','id','id',0, '1','0','1','0',now(), 'admin')
+
+    </insert>
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.BomTree">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id != ''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr != ''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+
+    <!-- 字段 自动创建，可以修改-->
+    <sql id="Field1">
+        product.name name,
+
+        product.code sysProductCode,
+        product.source_code custProductCode,
+        CASE
+        WHEN product.source_code is null THEN product.code
+        WHEN product.source_code is not null THEN product.source_code
+        ELSE null
+        END code,
+
+        product.spec spec,
+        product.genre genre,
+        genre.name genreName,
+        produnit.unit unit,
+        unit.name unitName,
+        product.type type,
+        type.name typeName,
+        tree.bom_id bomId,<!-- vmes_bom id -->
+        tree.prod_id prodId,<!-- 产品id -->
+        tree.parent_prod_id parentProdId,<!-- 上级产品id -->
+        tree.layer layer,<!-- 级别 -->
+        CONCAT('1:',ROUND(tree.ratio,2)) ratio,<!-- 用料比例 -->
+        tree.cuser cuser,<!-- 创建用户id -->
+        tree.cdate cdate,<!-- 创建时间 -->
+        tree.uuser uuser,<!-- 修改用户id -->
+        tree.udate udate,<!-- 修改时间 -->
+        tree.isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+        tree.remark remark,<!-- 备注 -->
+        tree.path_id pathId,<!-- 路径 -->
+        tree.isreplaceable isreplaceable,
+        (select count(*) from vmes_bom_tree where INSTR(path_id,tree.path_id)>0  and isreplaceable='0') childrenNum,
+        tree.id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，可以修改-->
+    <!--
+    <sql id="Column1">
+            'vmes_bom id'  bomId,
+            '产品id'  prodId,
+            '上级产品id'  parentProdId,
+            '级别'  layer,
+            '用料比例'  ratio,
+            '创建用户id'  cuser,
+            '创建时间'  cdate,
+            '修改用户id'  uuser,
+            '修改时间'  udate,
+            '是否启用(0:已禁用 1:启用)'  isdisable,
+            '备注'  remark,
+            '路径'  pathId,
+            'id' id_hide
+    </sql>
+     -->
+
+    <!-- 自动创建，可以修改 -->
+    <!--
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"></include>
+        from dual
+    </select>
+    -->
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        vmes_bom_tree tree
+        left join vmes_product product on product.id = tree.prod_id
+        left join vmes_product_unit produnit on produnit.product_id = product.id and produnit.type = 1
+        left join vmes_dictionary genre on product.genre = genre.id
+        left join vmes_dictionary unit on produnit.unit = unit.id
+        left join vmes_dictionary type on product.type = type.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="code != null and code != ''">
+                and product.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and product.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="bomId != null and bomId != ''">
+                and tree.bom_id = #{bomId}
+            </if>
+            <if test="layer != null and layer != ''">
+                and tree.layer = #{layer}
+            </if>
+            <if test="prodId != null and prodId != ''">
+                and tree.parent_prod_id = #{prodId}
+            </if>
+            <if test="parentProdId != null and parentProdId != ''">
+                and tree.parent_prod_id = #{parentProdId}
+            </if>
+            <if test="isreplaceable != null and isreplaceable != ''">
+                and tree.isreplaceable = #{isreplaceable}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataListPage"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        vmes_bom_tree tree
+        left join vmes_product product on product.id = tree.prod_id
+        left join vmes_product_unit produnit on produnit.product_id = product.id and produnit.type = 1
+        left join vmes_dictionary genre on product.genre = genre.id
+        left join vmes_dictionary unit on produnit.unit = unit.id
+        left join vmes_dictionary type on product.type = type.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="code != null and code != ''">
+                and product.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and product.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="prodId != null and prodId != ''">
+                and tree.parent_prod_id = #{prodId}
+            </if>
+            <if test="bomId != null and bomId != ''">
+                and tree.bom_id = #{bomId}
+            </if>
+            <if test="isreplaceable != null and isreplaceable != ''">
+                and tree.isreplaceable = #{isreplaceable}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByBomIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        bom_id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getBomTreeList"  parameterType="com.yvan.PageData"  resultType="com.xy.vmes.entity.TreeEntity">
+        select
+        tree.id bomTreeId,
+        tree.path_id pathId,
+        tree.bom_id bomId,
+        tree.prod_id id,
+        product.name name,
+        tree.parent_prod_id pid,
+        tree.layer,
+        tree.isdisable
+        from
+        vmes_bom_tree tree
+        left join vmes_product product on product.id = tree.prod_id
+        <where>
+            <if test="name!= null and name != ''"><!-- 关键词检索 -->
+                and product.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="bomId!= null and bomId != ''"><!-- 关键词检索 -->
+                and tree.bom_id = #{bomId}
+            </if>
+            <if test="pid!= null and pid != ''"><!-- 关键词检索 -->
+                and tree.parent_prod_id = #{pid}
+            </if>
+            <if test="id!= null and id != ''"><!-- 关键词检索 -->
+                and tree.prod_id = #{pid}
+            </if>
+            <if test="isdisable!= null and isdisable != ''"><!-- 关键词检索 -->
+                and tree.isdisable = #{isdisable}
+            </if>
+            <if test="pathId != null and pathId != ''">
+                and tree.path_id LIKE CONCAT(#{pathId},'%')
+            </if>
+            <if test="isreplaceable != null and isreplaceable != ''">
+                and tree.isreplaceable = #{isreplaceable}
+            </if>
+            <if test="queryStr != null and queryStr!=''" ><!-- 自定义查询 -->
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getBomTreeProductList"  parameterType="com.yvan.PageData"  resultType="com.xy.vmes.entity.TreeEntity">
+        select
+        tree.id bomTreeId,
+        tree.path_id pathId,
+        tree.bom_id bomId,
+        tree.prod_id id,
+        tree.parent_prod_id pid,
+        tree.layer,
+        tree.ratio,
+        tree.isdisable,
+        product.name,
+        case when product.source_code is null then product.code else product.source_code end code,
+        product.spec,
+        genre.name genre,
+        wp.stock_count stockCount,
+        wp.stock_count count,
+        unit.name unit
+        from
+        vmes_bom_tree tree
+        left join vmes_product product on product.id = tree.prod_id
+        left join vmes_dictionary genre on product.genre = genre.id
+        left join vmes_product_unit produnit on produnit.product_id = product.id and produnit.type = 1
+        left join vmes_dictionary unit on produnit.unit = unit.id
+
+        left join (
+            select
+            product_id,
+            sum(stock_count) stock_count
+            from vmes_warehouse_product warehouseProduct
+            left join vmes_warehouse warehouse on warehouse.id = warehouseProduct.warehouse_id
+            left join vmes_warehouse wh on warehouse.warehouse_id = wh.id
+            left join vmes_dictionary entityType on wh.entity_type = entityType.id
+            <where>
+                <if test="companyId != null and companyId != ''" >
+                    and company_id = #{companyId}
+                </if>
+                <!--
+                    <if test="notInEntityTypes != null and notInEntityTypes != ''" >
+                        and entityType.name not in (${notInEntityTypes})
+                    </if>
+                -->
+                and entityType.name not in ('不合格品')
+            </where>
+            group by product_id
+        ) wp on product.id = wp.product_id
+
+        <where>
+            <if test="name!= null and name != ''"><!-- 关键词检索 -->
+                and product.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="bomId!= null and bomId != ''"><!-- 关键词检索 -->
+                and tree.bom_id = #{bomId}
+            </if>
+            <if test="pid!= null and pid != ''"><!-- 关键词检索 -->
+                and tree.parent_prod_id = #{pid}
+            </if>
+            <if test="id!= null and id != ''"><!-- 关键词检索 -->
+                and tree.prod_id = #{pid}
+            </if>
+            <if test="isdisable!= null and isdisable != ''"><!-- 关键词检索 -->
+                and tree.isdisable = #{isdisable}
+            </if>
+            <if test="isreplaceable != null and isreplaceable != ''">
+                and tree.isreplaceable = #{isreplaceable}
+            </if>
+            <if test="pathId != null and pathId != ''">
+                and tree.path_id LIKE CONCAT(#{pathId},'%')
+            </if>
+            <if test="queryStr != null and queryStr!=''" ><!-- 自定义查询 -->
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+</mapper>

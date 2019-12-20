@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：操作日志 Mapper.xml
+创建人：刘威 自动创建
+创建时间：2018-08-28
+ -->
+<mapper namespace="com.xy.vmes.deecoop.system.dao.LogInfoMapper">
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+            '日志类型 operate:操作日志 state:状态日志'  type,
+            '业务单ID'  businessId,
+            '公司ID' companyId,
+            '业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单)'  businessType,
+            '操作来源(app:终端操作 web:web端操作 sys:系统产生)'  source,
+            '模块名称'  modelName,
+            '业务操作类型 (add,update,delete)'  operate,
+            '备注'  remark,
+            '创建时间'  cdate,
+            '创建人账号'  cuser,
+            '(删除,修改)-业务id字符串'  operateValue,
+            '修改时间'  udate,
+            '修改人账号'  uuser,
+            '请求URL'  operateUrl,
+            'id' id_hide
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+            type type,<!-- 日志类型 operate:操作日志 state:状态日志 -->
+            business_id businessId,<!-- 业务单ID -->
+            company_id companyId,
+            business_type businessType,<!-- 业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单) -->
+            source  source,<!-- 操作来源(app:终端操作 web:web端操作 sys:系统产生) -->
+            model_name modelName,<!-- 模块名称 -->
+            operate  operate,<!-- 业务操作类型 (add,update,delete) -->
+            remark remark,<!-- 备注 -->
+            cdate cdate,<!-- 创建时间 -->
+            cuser cuser,<!-- 创建人账号 -->
+            operate_value operateValue,<!-- (删除,修改)-业务id字符串 -->
+            udate udate,<!-- 修改时间 -->
+            uuser uuser,<!-- 修改人账号 -->
+            operate_url operateUrl,<!-- 请求URL -->
+            id id <!-- id -->
+        from
+        vmes_loginfo
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.LogInfo">
+        select
+            type type,<!-- 日志类型 operate:操作日志 state:状态日志 -->
+            business_id businessId,<!-- 业务单ID -->
+            company_id companyId,
+            business_type businessType,<!-- 业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单) -->
+            source  source,<!-- 操作来源(app:终端操作 web:web端操作 sys:系统产生) -->
+            model_name modelName,<!-- 模块名称 -->
+            operate  operate,<!-- 业务操作类型 (add,update,delete) -->
+            remark remark,<!-- 备注 -->
+            cdate cdate,<!-- 创建时间 -->
+            cuser cuser,<!-- 创建人账号 -->
+            operate_value operateValue,<!-- (删除,修改)-业务id字符串 -->
+            udate udate,<!-- 修改时间 -->
+            uuser uuser,<!-- 修改人账号 -->
+            operate_url operateUrl,<!-- 请求URL -->
+            id id <!-- id -->
+        from
+        vmes_loginfo
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        vmes_loginfo
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        vmes_loginfo
+        set isdisable = 1 ,udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+
+
+
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'LogInfo' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+            (replace(uuid(), '-', ''),'LogInfo','type','日志类型',1, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','businessId','业务单ID',2, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','businessType','业务类别',3, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','source','操作来源',4, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','modelName','模块名称',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','operate','操作记录',6, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','remark','备注',7, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','cdate','操作时间',8, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','cuser','创建人账号',9, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','operateValue','业务id字符串',10, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','udate','修改时间',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','uuser','修改人账号',12, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','userCode','操作人账号',13, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','userName','操作人姓名',14, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','operateUrl','请求URL',15, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'LogInfo','id','id',0, '1','0','1','0',now(), 'admin')
+    </insert>
+
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.LogInfo">
+        select
+            type type,<!-- 日志类型 operate:操作日志 state:状态日志 -->
+            business_id businessId,<!-- 业务单ID -->
+            company_id companyId,
+            business_type businessType,<!-- 业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单) -->
+            source  source,<!-- 操作来源(app:终端操作 web:web端操作 sys:系统产生) -->
+            model_name modelName,<!-- 模块名称 -->
+            operate  operate,<!-- 业务操作类型 (add,update,delete) -->
+            remark remark,<!-- 备注 -->
+            cdate cdate,<!-- 创建时间 -->
+            cuser cuser,<!-- 创建人账号 -->
+            operate_value operateValue,<!-- (删除,修改)-业务id字符串 -->
+            udate udate,<!-- 修改时间 -->
+            uuser uuser,<!-- 修改人账号 -->
+            operate_url operateUrl,<!-- 请求URL -->
+            id id <!-- id -->
+        from
+        vmes_loginfo
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id != ''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr != ''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 字段值 自动创建，可以修改-->
+    <!--
+    <sql id="Column1">
+            '日志类型 operate:操作日志 state:状态日志'  type,
+            '业务单ID'  businessId,
+            '业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单)'  businessType,
+            '操作来源(app:终端操作 web:web端操作 sys:系统产生)'  source,
+            '模块名称'  modelName,
+            '业务操作类型 (add,update,delete)'  operate,
+            '备注'  remark,
+            '创建时间'  cdate,
+            '创建人账号'  cuser,
+            '(删除,修改)-业务id字符串'  operateValue,
+            '修改时间'  udate,
+            '修改人账号'  uuser,
+            '请求URL'  operateUrl,
+            'id' id_hide
+    </sql>
+     -->
+
+    <!-- 自动创建，可以修改 -->
+    <!--
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"></include>
+        from dual
+    </select>
+    -->
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+            u.user_code userCode,
+            u.user_name userName,
+            t.type type,<!-- 日志类型 operate:操作日志 state:状态日志 -->
+            t.business_id businessId,<!-- 业务单ID -->
+            t.business_type businessType,<!-- 业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单) -->
+            case when t.source='app' then '终端操作' when t.source='web' then 'WEB操作' else '系统生成' end  source,<!-- 操作来源(app:终端操作 web:web端操作 sys:系统产生) -->
+            t.model_name modelName,<!-- 模块名称 -->
+            case when t.operate='add' then '新增' when t.operate='update' then '修改' when t.operate='delete' then '删除' else null end  operate,<!-- 业务操作类型 (add,update,delete) -->
+            t.remark remark,<!-- 备注 -->
+            t.cdate cdate,<!-- 创建时间 -->
+            t.cuser cuser,<!-- 创建人账号 -->
+            t.operate_value operateValue,<!-- (删除,修改)-业务id字符串 -->
+            t.udate udate,<!-- 修改时间 -->
+            t.uuser uuser,<!-- 修改人账号 -->
+            t.operate_url operateUrl,<!-- 请求URL -->
+            t.id id <!-- id -->
+        from
+        vmes_loginfo  t
+        left join vmes_user u on t.cuser = u.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="userCode != null and userCode != ''">
+                and u.user_code LIKE CONCAT(CONCAT('%', #{userCode}),'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                and u.user_name LIKE CONCAT(CONCAT('%', #{userName}),'%')
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and t.company_id = #{currentCompanyId}
+            </if>
+            <if test="cdate!= null and cdate != ''"><!-- 关键词检索 -->
+                <![CDATA[ and a.cdate >= #{startDate} and a.cdate <=  #{endDate}]]>
+            </if>
+        </where>
+        order by t.cdate desc
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataListPage"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+            u.user_code userCode,
+            u.user_name userName,
+            t.type type,<!-- 日志类型 operate:操作日志 state:状态日志 -->
+            t.business_id businessId,<!-- 业务单ID -->
+            t.business_type businessType,<!-- 业务类别(1:生产计划 2:产品 3:部门 4:部门子计划 5:派工单 6:子派工单) -->
+            case when t.source='app' then '终端操作' when t.source='web' then 'WEB操作' else '系统生成' end  source,<!-- 操作来源(app:终端操作 web:web端操作 sys:系统产生) -->
+            t.model_name modelName,<!-- 模块名称 -->
+            case when t.operate='add' then '新增' when t.operate='update' then '修改' when t.operate='delete' then '删除' else null end  operate,<!-- 业务操作类型 (add,update,delete) -->
+            t.remark remark,<!-- 备注 -->
+            t.cdate cdate,<!-- 创建时间 -->
+            t.cuser cuser,<!-- 创建人账号 -->
+            t.operate_value operateValue,<!-- (删除,修改)-业务id字符串 -->
+            t.udate udate,<!-- 修改时间 -->
+            t.uuser uuser,<!-- 修改人账号 -->
+            t.operate_url operateUrl,<!-- 请求URL -->
+            t.id id <!-- id -->
+        from
+        vmes_loginfo  t
+        left join vmes_user u on t.cuser = u.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="userCode != null and userCode != ''">
+                and u.user_code LIKE CONCAT(CONCAT('%', #{userCode}),'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                and u.user_name LIKE CONCAT(CONCAT('%', #{userName}),'%')
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and t.company_id = #{currentCompanyId}
+            </if>
+            <if test="cdate!= null and cdate != ''"><!-- 关键词检索 -->
+                <![CDATA[ and t.cdate >= #{startDate} and t.cdate <=  #{endDate}]]>
+            </if>
+        </where>
+        order by t.cdate desc
+    </select>
+
+</mapper>

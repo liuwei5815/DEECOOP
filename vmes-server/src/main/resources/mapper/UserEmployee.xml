@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：视图用户员工 ViewVmesUserEmployee.xml
+创建人：陈刚
+创建时间：2018-07-20
+ -->
+<mapper namespace="com.xy.vmes.deecoop.system.dao.UserEmployeeMapper">
+    <select id="findViewUserEmployList" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+            uuid() as id,
+
+            a.id as userID,
+            a.employ_id as userEmployID,
+            a.dept_id as userDeptID,
+            a.company_id as userCompanyID,
+            a.user_code as userCode,
+
+            a.password as userPassword,
+            a.open_id as userOpenID,
+            a.mobile as userMobile,
+            a.email as userEmail,
+            a.user_name as userName,
+
+            a.isdisable as userIsdisable,
+            a.cdate as userCdate,
+            a.cuser as userCuser,
+            a.udate as userUdate,
+            a.uuser as userUuser,
+
+            a.user_type as userType,
+            a.column_1 as userColumn1,
+            a.column_2 as userColumn2,
+            a.column_3 as userColumn3,
+
+            b.id as employID,
+            b.code as employCode,
+            b.type as employType,
+            b.user_id as employUserID,
+            b.company_id as employCompanyID,
+
+            b.name as employName,
+            b.name_en as employNameEn,
+            b.photo,
+            b.icon,
+            b.mobile,
+
+            b.email,
+            b.sex,
+            b.birthday,
+            b.leave_date as leaveDate,
+            b.entry_date as entryDate,
+
+            b.native_place as nativePlace,
+            b.political,
+            b.identity_number as identityNumber,
+            b.marital,
+            b.isdisable as employIsdisable,
+
+            b.cdate as employCdate,
+            b.cuser as employCuser,
+            b.udate as employUdate,
+            b.uuser as employUuser,
+            b.remark as employRemark,
+
+            b.isOpenUser as isOpenUser,
+            b.column_1 as employColumn1,
+            b.column_2 as employColumn2,
+            b.column_3 as employColumn3
+        from deecoop.vmes_user a
+            left join deecoop.vmes_employee b on a.employ_id = b.id
+        <choose>
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <if test="userID != null and userID != ''" >
+                        and a.id = #{userID}
+                    </if>
+                    <if test="userCompanyID != null and userCompanyID != ''" >
+                        and a.company_id = #{userCompanyID}
+                    </if>
+                    <if test="userCode != null and userCode != ''" >
+                        and a.user_code = #{userCode}
+                    </if>
+                    <if test="userPassword != null and userPassword != ''" >
+                        and a.password = #{userPassword}
+                    </if>
+                    <if test="userMobile != null and userMobile != ''" >
+                        and a.mobile = #{userMobile}
+                    </if>
+                    <if test="userEmail != null and userEmail != ''" >
+                        and a.email = #{userEmail}
+                    </if>
+                    <if test="userIsdisable != null and userIsdisable != ''" >
+                        and a.isdisable = #{userIsdisable}
+                    </if>
+
+                    <if test="employID != null and employID != ''" >
+                        and b.id = #{employID}
+                    </if>
+                    <if test="employCompanyID != null and employCompanyID != ''" >
+                        and b.company_id = #{employCompanyID}
+                    </if>
+                    <if test="employType != null and employType != ''" >
+                        and b.type = #{employType}
+                    </if>
+                    <if test="employCode != null and employCode != ''" >
+                        and b.code = #{employCode}
+                    </if>
+                    <if test="employName != null and employName != ''" >
+                        and b.name =#{employName}
+                    </if>
+                    <if test="employNameEn != null and employNameEn != ''" >
+                        and b.name_en = #{employNameEn}
+                    </if>
+                    <if test="mobile != null and mobile != ''" >
+                        and b.mobile = #{mobile}
+                    </if>
+                    <if test="email != null and email != ''" >
+                        and b.email = #{email}
+                    </if>
+                    <if test="employIsdisable != null and employIsdisable != ''" >
+                        and b.isdisable = #{employIsdisable}
+                    </if>
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr!=''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+</mapper>

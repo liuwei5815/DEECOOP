@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：Bom表关联货品表 Mapper.xml
+创建人：陈刚
+创建时间：2019-09-25
+ -->
+<mapper namespace="com.xy.vmes.deecoop.base.dao.BomTreeToProductMapper">
+    <!--Bom货品Excel数据导出-->
+    <insert id="bomTreeToProduct" >
+        delete from vmes_column where model_code = 'bomTreeToProduct';
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+        (replace(uuid(), '-', ''),'bomTreeToProduct','id','id',0, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','bomId','bomId id',1, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','prodId','产品id',2, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','parentProdId','上级产品id',3, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','layer','级别',4, '1','0','1','0',now(), 'admin'),
+
+        (replace(uuid(), '-', ''),'bomTreeToProduct','ratio','单件用量',5, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','cuser','创建用户id',6, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','cdate','创建时间',7, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','uuser','修改用户id',8, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','udate','修改时间',9, '1','0','1','0',now(), 'admin'),
+
+        (replace(uuid(), '-', ''),'bomTreeToProduct','isdisable','是否启用',10, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','remark','备注',11, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','pathId','pathId',12, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','isreplaceable','isreplaceable',13, '1','0','1','0',now(), 'admin'),
+
+        (replace(uuid(), '-', ''),'bomTreeToProduct','sysProductCode','系统货品编码',14, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','custProductCode','企业货品编码',15, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productCode','货品编码',16, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productName','货品名称',17, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productSpec','规格型号',18, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productGenre','货品属性id',19, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productGenreName','货品属性',20, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productUnit','计量单位ID',21, '1','0','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''),'bomTreeToProduct','productUnitName','计量单位',22, '1','1','1','0',now(), 'admin'),
+        (replace(uuid(), '-', ''), 'bomTreeToProduct', 'pictureCode', '图号', 23, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+
+        (replace(uuid(), '-', ''), 'bomTreeToProduct', 'pathIndexCode', '序号', 24, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+        (replace(uuid(), '-', ''), 'bomTreeToProduct', 'pathRatio', '数量', 25, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+    </insert>
+
+    <select id="findBomTreeProductList" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+            bomTree.id id,
+            bomTree.bom_id bomId,
+            bomTree.prod_id prodId,
+            bomTree.parent_prod_id parentProdId,
+            bomTree.layer layer,
+
+            round(ifnull(bomTree.ratio, 0), 2) ratio,
+            bomTree.cuser cuser,
+            bomTree.cdate cdate,
+            bomTree.uuser uuser,
+            bomTree.udate udate,
+
+            bomTree.isdisable isdisable,
+            bomTree.remark remark,
+            bomTree.path_id pathId,
+            bomTree.isreplaceable,
+
+            <!--货品表-->
+            product.code sysProductCode,
+            product.source_code custProductCode,
+            CASE
+              WHEN product.source_code is null THEN product.code
+              WHEN product.source_code is not null THEN product.source_code
+            ELSE null
+            END productCode,
+
+            product.name productName,
+            product.spec productSpec,
+            product.genre productGenre,
+            genre.name productGenreName,
+            productUnit.unit productUnit,
+            productUnitName.name productUnitName,
+            product.picture_code pictureCode
+
+        from vmes_bom_tree bomTree
+            left join vmes_bom bom on bomTree.bom_id = bom.id
+            left join vmes_product product on bomTree.prod_id = product.id
+            left join vmes_dictionary genre on product.genre = genre.id
+
+            left join vmes_product_unit productUnit on bomTree.prod_id = productUnit.product_id and productUnit.type = 1
+            left join vmes_dictionary productUnitName on productUnit.unit = productUnitName.id
+        <where>
+            <if test="companyId != null and companyId != ''" >
+                and bom.company_id = #{companyId}
+            </if>
+            <if test="bomId != null and bomId != ''">
+                and bomTree.bom_id = #{bomId}
+            </if>
+            <if test="parentProdId != null and parentProdId != ''">
+                and bomTree.parent_prod_id = #{parentProdId}
+            </if>
+            <if test="prodId != null and prodId != ''">
+                and bomTree.prod_id = #{prodId}
+            </if>
+            <if test="isreplaceable != null and isreplaceable != ''">
+                and bomTree.isreplaceable = #{isreplaceable}
+            </if>
+
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,65 @@
+apply plugin: 'maven'
+
+group = 'com.yvan'
+version = '1.0-SNAPSHOT'
+
+bootRepackage {
+    enabled = false
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-core'
+    compile 'com.fasterxml.jackson.core:jackson-annotations'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda'
+
+    compile 'joda-time:joda-time:2.9.9'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-io:commons-io:2.5'
+    compile 'commons-codec:commons-codec:1.10'
+
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-freemarker'
+    compile 'org.springframework.boot:spring-boot-starter-cache'
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+
+    compile 'com.baomidou:mybatis-plus-boot-starter:2.3.3'
+    compile 'com.alibaba:druid:1.1.10'
+    compile 'mysql:mysql-connector-java'
+
+    compile 'org.springframework:spring-aspects'
+    compile 'com.google.guava:guava:19.0'
+
+    compile 'org.fusesource.jansi:jansi:1.17.1'
+
+    compile 'com.auth0:java-jwt:3.2.0'
+    compile 'net.coobird:thumbnailator:0.4.8'
+    compile 'org.projectlombok:lombok'
+
+//    compile 'org.flowable:flowable-spring-boot-starter:6.3.0'
+
+    compile 'org.apache.poi:poi:3.17'
+    compile 'org.apache.poi:poi-ooxml-schemas:3.17'
+    compile 'org.apache.poi:poi-ooxml:3.17'
+
+    compile 'itext:itext:4.2.0'
+
+    //compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.zxing:core:3.2.1'
+
+    compile 'org.springframework.boot:spring-boot-starter-activemq'
+    compile 'org.springframework:spring-jms'
+    compile 'org.apache.activemq:activemq-pool:5.12.1'
+
+    compile 'com.corundumstudio.socketio:netty-socketio:1.7.11'
+
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+
+}
+
+artifacts {
+    archives jar
+}

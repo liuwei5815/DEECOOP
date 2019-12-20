@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.vmes.deecoop.system.dao.CompanyMapper">
+    <sql id="Column1">
+        <!--查询显示字段-->
+        '企业编码' code,
+        '企业名称' name,
+        '企业简称' companyShortname,
+        '显示顺序' serialNumber,
+        '企业性质' companyTypeName,
+
+        '截至日期' companyValidityDate,
+        '企业用户数' companyUserCount,
+        '是否启用' isdisable,
+        '账号' userCode,
+        '管理员姓名' userName,
+
+        '手机号' mobile,
+        '邮箱' email,
+        '套餐' roleName,
+        '用户类型' userType,
+        '备注' remark,
+        '地区' areaName,
+        '地区' area,
+
+        <!--查询隐藏字段-->
+        'id' id_hide,
+        'pid' pid_hide,
+        'roleId' roleId_hide,
+        'userId' userId_hide,
+        'userRoleId' userRoleId_hide,
+        'layer' layer_hide,
+        'companyType' companyType_hide,
+        'organizeType' organizeType_hide
+    </sql>
+
+    <select id="getColumnList" resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"/>
+        from dual
+    </select>
+
+    <sql id="Field1">
+        <!--查询显示字段-->
+        a.code code,
+        a.name name,
+        a.area area,
+        area.name areaName,
+        area.id_1 id1,
+        area.id_2 id2,
+        area.id_3 id3,
+        area.id_4 id4,
+        area.id_5 id5,
+        area.id_6 id6,
+        a.company_shortname companyShortname,
+        a.serial_number serialNumber,
+        c.name companyTypeName,
+
+        DATE_FORMAT(a.company_validity_date,'%Y-%m-%d') companyValidityDate,
+        a.company_user_count companyUserCount,
+        a.isdisable isdisable,
+        b.user_code userCode,
+        b.user_name userName,
+
+        b.mobile mobile,
+        b.email email,
+        f.name roleName,
+        '企业管理员' userType,
+        f.remark remark,
+
+        <!--查询隐藏字段-->
+        a.id id,
+        a.pid pid,
+        b.id userId,
+        f.id roleId,
+        d.id userRoleId,
+        a.layer layer,
+        a.company_type companyType,
+        a.organize_type organizeType
+
+    </sql>
+    <select id="getDataListPage" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select <include refid="Field1"/>
+        from vmes_department a
+            left join vmes_user b on a.id = b.company_id and b.user_type = '2fb9bbee46ca4ce1913f3a673a7dd68f' <!--企业管理员-->
+            left join vmes_user_role d on b.id = d.user_id
+            left join vmes_role f on d.role_id = f.id
+            left join vmes_dictionary c on a.company_type = c.id
+            left join vmes_dictionary area on a.area = area.id
+        <where>
+            <if test="id != null and id != ''" >
+                and a.id = #{id}
+            </if>
+            <if test="code != null and code != ''">
+                and a.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and a.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="companyType != null and companyType != ''" >
+                and a.company_type = #{companyType}
+            </if>
+            <if test="isdisable != null and isdisable != ''" >
+                and a.isdisable = #{isdisable}
+            </if>
+            <if test="layer != null and layer != ''" >
+                and a.layer = #{layer}
+            </if>
+
+            <if test="userCode != null and userCode != ''">
+                and b.user_code LIKE CONCAT(CONCAT('%', #{userCode}),'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                and b.user_name LIKE CONCAT(CONCAT('%', #{userName}),'%')
+            </if>
+            <if test="mobile != null and mobile != ''">
+                and b.mobile LIKE CONCAT(CONCAT('%', #{mobile}),'%')
+            </if>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <select id="findListCompany" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+            id id,
+            pid pid,
+            code code,
+            name name,
+            name_en nameEn,
+            company_shortname companyShortname
+        from vmes_department
+        <where>
+            <if test="currentCompanyId != null and currentCompanyId != ''" >
+                and id = #{currentCompanyId}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <insert id="insertColumnByCompany" >
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+        (replace(uuid(), '-', ''), 'setCompany', 'id', 'id', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin'),
+        (replace(uuid(), '-', ''), 'setCompany', 'pid', '上级id', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin'),
+        (replace(uuid(), '-', ''), 'setCompany', 'code', '企业编码', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin'),
+        (replace(uuid(), '-', ''), 'setCompany', 'name', '企业名称', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin'),
+        (replace(uuid(), '-', ''), 'setCompany', 'companyShortname', '企业简称', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin')
+    </insert>
+
+    <insert id="insertColumn" >
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+        ('7ccd0de9a8c711e884ad00163e105f05', 'company', 'code', '企业编码', 1, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd0e81a8c711e884ad00163e105f05', 'company', 'name', '企业名称', 2, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd147ea8c711e884ad00163e105f05', 'company', 'companyShortname', '企业简称', 3, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd11eba8c711e884ad00163e105f05', 'company', 'serialNumber', '显示顺序', 4, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd17bea8c711e884ad00163e105f05', 'company', 'companyTypeName', '企业性质', 5, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd14e0a8c711e884ad00163e105f05', 'company', 'companyValidityDate', '截至日期', 6, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd1544a8c711e884ad00163e105f05', 'company', 'companyUserCount', '企业用户数', 7, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd15aca8c711e884ad00163e105f05', 'company', 'isdisable', '是否启用', 8, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd1831a8c711e884ad00163e105f05', 'company', 'userCode', '账号', 9, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd189fa8c711e884ad00163e105f05', 'company', 'userName', '管理员姓名', 10, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd18ffa8c711e884ad00163e105f05', 'company', 'mobile', '手机号', 11, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd195ca8c711e884ad00163e105f05', 'company', 'email', '邮箱', 12, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd1357a8c711e884ad00163e105f05', 'company', 'roleName', '套餐', 13, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd103fa8c711e884ad00163e105f05', 'company', 'userType', '用户类型', 14, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd1a20a8c711e884ad00163e105f05', 'company', 'remark', '备注', 15, '1', '1', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd1a83a8c711e884ad00163e105f05', 'company', 'id', 'id', 16, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd0aafa8c711e884ad00163e105f05', 'company', 'pid', '上级id', 17, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd0fb5a8c711e884ad00163e105f05', 'company', 'userId', '用户id', 18, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd141da8c711e884ad00163e105f05', 'company', 'roleId', '角色id', 19, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd13b7a8c711e884ad00163e105f05', 'company', 'userRoleId', '用户角色id', 20, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd10c2a8c711e884ad00163e105f05', 'company', 'layer', '组织级别', 21, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd128da8c711e884ad00163e105f05', 'company', 'organizeType', '组织类型', 22, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd12f1a8c711e884ad00163e105f05', 'company', 'companyType', '公司类型id', 23, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd161ca8c711e884ad00163e105f05', 'company', 'cdate', '创建时间', 24, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd168ca8c711e884ad00163e105f05', 'company', 'cuser', '创建人id', 25, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd16f2a8c711e884ad00163e105f05', 'company', 'udate', '修改时间', 26, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'uuser', '修改人id', 27, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id1', 'id1', 28, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id2', 'id2', 29, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id3', 'id3', 30, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id4', 'id4', 31, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id5', 'id5', 32, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+        ('7ccd175ca8c711e884ad00163e105f05', 'company', 'id6', 'id6', 33, '1', '0', '1', '0', '2018-8-26 08:32:18', 'admin'),
+    </insert>
+
+    <!--创建备件仓库:当创建企业时默认创建备件仓库-->
+    <insert id="insertWarehouseBySpare" parameterType = "java.util.Map">
+        INSERT INTO vmes_warehouse (
+            id,pid,company_id,entity_type,layer,
+            qrcode,code,warehouse_id,name,path_id,
+            path_name,cuser,cdate
+        ) VALUES (
+            #{id},#{pid},#{company_id},#{entity_type},#{layer},
+            #{qrcode},#{code},#{warehouse_id},#{name},#{path_id},
+            #{path_name},#{cuser},#{cdate}
+        )
+    </insert>
+
+</mapper>

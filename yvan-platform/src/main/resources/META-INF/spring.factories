@@ -1,0 +1,11 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.yvan.platform.SpringMvcAutoConfiguration,\
+com.yvan.spring.autoconfig.RedisCacheAutoConfiguration,\
+com.yvan.spring.autoconfig.FreemarkerAutoConfiguration,\
+com.yvan.spring.autoconfig.FreemarkerFunctionAutoConfiguration,\
+com.yvan.mybatis.MyBatisConfiguration,\
+com.yvan.mybatis.MyBatisConfigurationAfter,\
+com.yvan.druid.DruidAutoConfiguration,\
+com.yvan.filter.ComonFilter,\
+com.yvan.rabbitmq.config.ProductStockcountLockBinding,\
+com.yvan.socketio.SocketIOConfig

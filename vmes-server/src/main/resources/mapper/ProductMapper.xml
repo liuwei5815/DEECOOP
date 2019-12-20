@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：vmes_product:产品表 Mapper.xml
+创建人：陈刚 自动创建
+创建时间：2018-09-21
+ -->
+<mapper namespace="com.xy.vmes.deecoop.base.dao.ProductMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_product
+    </sql>
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+        id id, <!-- id -->
+        company_id companyId,<!-- 公司ID-组织架构 -->
+        qrcode qrcode,<!-- 二维码-(图片相对路径) -->
+        photo photo,<!-- 产品图片 -->
+        code code,<!-- 产品编码 -->
+
+        source_code sourceCode,
+        name name,<!-- 产品名称 -->
+        name_en nameEn,<!-- 英文名称 -->
+        spec spec,<!-- 规格型号 -->
+        genre genre,<!-- 产品属性(字典表-vmes_dictionary.id) -->
+
+        last_unit lastUnit,<!-- 结算单位(字典表-vmes_dictionary.id) -->
+        last_ratio lastRatio,<!-- 结算比例 -->
+        price price,<!-- 单价 -->
+        stock_count stockCount,
+        safety_count safetyCount,
+
+        type type,<!-- 类型(字典表-vmes_dictionary.id) -->
+        validity_date validityDate,<!-- 保存期(yyyy-mm-dd) -->
+        remark remark,<!-- 备注 -->
+        cuser cuser,<!-- 创建用户id -->
+        cdate cdate,<!-- 创建时间 -->
+
+        uuser uuser,<!-- 修改用户id -->
+        udate udate,<!-- 修改时间 -->
+        isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+        version version,
+        validity_days validityDays,
+
+        lock_count lockCount,
+        last_in_date lastInDate,
+        last_out_date lastOutDate,
+        last_update_date lastUpdateDate,
+        picture_code pictureCode
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{companyId},<!-- 公司ID-组织架构 -->
+		#{qrcode},<!-- 二维码-(图片相对路径) -->
+		#{code},<!-- 产品编码 -->
+        #{sourceCode},
+		#{name},<!-- 产品名称 -->
+		#{nameEn},<!-- 英文名称 -->
+		#{spec},<!-- 规格型号 -->
+		#{genre},<!-- 产品属性(字典表-vmes_dictionary.id) -->
+		#{lastUnit},<!-- 结算单位(字典表-vmes_dictionary.id) -->
+		#{lastRatio},<!-- 结算比例 -->
+		#{price},<!-- 单价 -->
+		#{type},<!-- 类型(字典表-vmes_dictionary.id) -->
+		#{validityDate},<!-- 保存期(yyyy-mm-dd) -->
+        #{validityDays},
+		#{remark},<!-- 备注 -->
+		#{cuser},<!-- 创建用户id -->
+		#{cdate},<!-- 创建时间 -->
+		#{uuser},<!-- 修改用户id -->
+		#{udate},<!-- 修改时间 -->
+		#{isdisable},<!-- 是否启用(0:已禁用 1:启用) -->
+		#{photo},<!-- 产品图片 -->
+		#{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段名称  '_hide' 表示前端列表隐藏 自动创建，禁止修改-->
+    <sql id="Column">
+        '公司ID-组织架构'  companyId,
+        '二维码-(图片相对路径)'  qrcode,
+        '系统货品编码'  code,
+        '企业货品编码' sourceCode,
+        '产品名称'  name,
+        '英文名称'  nameEn,
+        '规格型号'  spec,
+        '产品属性(字典表-vmes_dictionary.id)'  genre,
+        '结算单位(字典表-vmes_dictionary.id)'  lastUnit,
+        '结算比例'  lastRatio,
+        '单价'  price,
+        '类型(字典表-vmes_dictionary.id)'  type,
+        '保存期(yyyy-mm-dd)'  validityDate,
+        '保质期（天）' validityDays,
+        '备注'  remark,
+        '创建用户id'  cuser,
+        '创建时间'  cdate,
+        '修改用户id'  uuser,
+        '修改时间'  udate,
+        '是否启用(0:已禁用 1:启用)'  isdisable,
+        '产品图片'  photo,
+        'id' id_hide
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Product">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        <include refid="tableName"></include>
+        set isdisable = '0' ,udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="isExistBom"  parameterType="java.lang.String"  resultType="java.util.Map">
+        select
+        id,prod_id,bom_id
+        from
+        vmes_bom_tree
+        where
+        prod_id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+    <update id="updateProductInitialByStockCount" parameterType="com.yvan.PageData">
+        update vmes_product set stock_count = 0, lock_count = 0, safety_count = 0, last_in_date = null, last_out_date = null, last_update_date = null
+        <where>
+            <if test="companyId != null and companyId != ''" >
+                and company_id=#{companyId}
+            </if>
+            <!--过滤出 货品属性(备件)-->
+            <if test="'true' == isNeedGenreSpare">
+                and genre = '384cfd1329e648618b5a237ce1038bab'
+            </if>
+            <!--过滤出 货品属性(非备件)-->
+            <if test="'true' == isNeedNotInGenreSpare">
+                <![CDATA[ and genre <> '384cfd1329e648618b5a237ce1038bab' ]]>
+            </if>
+        </where>
+    </update>
+
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'product' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+            (replace(uuid(), '-', ''),'product','companyId','公司ID-组织架构',1, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','qrcode','二维码-(图片相对路径)',2, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','code','产品编码',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','name','产品名称',4, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','nameEn','英文名称',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','spec','规格型号',6, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','genre','产品属性(字典表-vmes_dictionary.id)',7, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','unit','计量单位(字典表-vmes_dictionary.id)',8, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','lastUnit','结算单位(字典表-vmes_dictionary.id)',9, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','lastRatio','结算比例',10, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','price','单价',11, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','type','类型(字典表-vmes_dictionary.id)',12, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','validityDays','保质期(天)',13, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','remark','备注',14, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','cuser','创建用户id',15, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','cdate','创建时间',16, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','uuser','修改用户id',17, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','udate','修改时间',18, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','isdisable','是否启用(0:已禁用 1:启用)',19, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','photo','产品图片',20, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','id','id',0, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','safetyCount','安全库存',0, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','lockCount','lockCount',0, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'product','productStockCount','productStockCount',0, '1','1','1','0',now(), 'admin'),
+
+            (replace(uuid(), '-', ''),'product','n2pFormula','n2pFormula',25, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''), 'product', 'n2pIsScale', 'n2p:是否需要四舍五入', 26, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+            (replace(uuid(), '-', ''), 'product', 'n2pDecimalCount', 'n2p:保留小数位数', 27, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+
+            (replace(uuid(), '-', ''),'product','p2nFormula','p2nFormula',28, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''), 'product', 'p2nIsScale', 'p2n:是否需要四舍五入', 29, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+            (replace(uuid(), '-', ''), 'product', 'p2nDecimalCount', 'p2n:保留小数位数', 30, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+            (replace(uuid(), '-', ''), 'product', 'pictureCode', '图号', 32, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+
+            (replace(uuid(), '-', ''), 'product', 'property', '自定义属性', 33, '1', '0', '1', '0', '2018-12-5 17:38:48', 'admin'),
+    </insert>
+
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Product">
+        select <include refid="Field"/>
+        from <include refid="tableName"/>
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id != ''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="ids != null and ids != ''" >
+                        and id in (${ids})
+                    </if>
+                    <if test="code != null and code != ''" >
+                        and code LIKE CONCAT('%',CONCAT(#{code}),'%')
+                    </if>
+                    <if test="sourceCode != null and sourceCode != ''" >
+                        and source_code LIKE CONCAT('%',CONCAT(#{sourceCode}),'%')
+                    </if>
+                    <if test="name != null and name != ''" >
+                        and name LIKE CONCAT('%',CONCAT(#{name}),'%')
+                    </if>
+                    <if test="companyId != null and companyId != ''" >
+                        and company_id=#{companyId}
+                    </if>
+                    <if test="genre != null and genre != ''" >
+                        and genre=#{genre}
+                    </if>
+
+                    <if test="spec != null and spec != ''" >
+                        and spec LIKE CONCAT(CONCAT(#{spec}),'%')
+                    </if>
+                    <if test="unit != null and unit != ''" >
+                        and unit=#{unit}
+                    </if>
+                    <if test="type != null and type != ''" >
+                        and type=#{type}
+                    </if>
+                    <if test="isdisable != null and isdisable != ''" >
+                        and isdisable=#{isdisable}
+                    </if>
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr != ''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataListPage" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+            prod.id id,
+            prod.company_id companyId,
+            prod.qrcode qrcode,
+            prod.photo photo,
+            prod.code sysCode,
+            case when prod.source_code is null then prod.code else prod.source_code end code,
+            prod.source_code sourceCode,
+            prod.name name,
+            prod.name_en nameEn,
+            prod.spec spec,
+            prod.genre genre,
+            prod.property,
+            genre.name genreName,
+            produnit.unit unit,
+            unit.name unitName,
+            '1' ratio,
+            '' prodProperty,
+
+            round(ifnull(produnit.product_price, 0), 4) price,
+            prod.type type,
+            type.name typeName,
+            prod.validity_days validityDays,
+
+            prod.remark remark,
+            prod.cuser cuser,
+            DATE_FORMAT(prod.cdate,'%Y-%m-%d %T') cdate,
+            prod.uuser uuser,
+            DATE_FORMAT(prod.udate,'%Y-%m-%d %T') udate,
+
+            ifnull(prod.safety_count, 0) safetyCount,
+            ifnull(prod.stock_count, 0) stockCount,
+            ifnull(prod.lock_count, 0) lockCount,
+            ifnull(prod.stock_count, 0) - ifnull(prod.lock_count, 0) productStockCount,
+
+            prod.version version,
+            prod.isdisable isdisable,
+            prod.picture_code pictureCode,
+
+            <!--货品计量单位-->
+            produnit.np_formula n2pFormula,
+            produnit.pn_formula p2nFormula,
+
+            produnit.n2p_is_scale n2pIsScale,
+            produnit.n2p_decimal_count n2pDecimalCount,
+
+            produnit.p2n_is_scale p2nIsScale,
+            produnit.p2n_decimal_count p2nDecimalCount
+
+            <if test="'true' == isNeedCustomerPrice">
+                ,round(ifnull(customerPrice.product_price, 0), 4) customerPrice
+            </if>
+        from vmes_product prod
+            left join vmes_product_unit produnit on produnit.product_id = prod.id and produnit.type = 1
+            left join vmes_dictionary genre on prod.genre = genre.id
+            left join vmes_dictionary unit on produnit.unit = unit.id
+            left join vmes_dictionary type on prod.type = type.id
+            <!--是否需要客户货品单价-->
+            <if test="'true' == isNeedCustomerPrice">
+                left join (
+                    select product_id,unit,customer_id,product_price,isdisable
+                    from vmes_sale_unit_price
+                    where isdisable = '1' and customer_id = #{customerId}
+                ) customerPrice on produnit.unit = customerPrice.unit and prod.id = customerPrice.product_id
+
+            </if>
+
+
+            left join vmes_user cuser on prod.cuser = cuser.id
+            left join vmes_department dept on dept.id = cuser.dept_id
+
+        <where>
+
+            <if test='dataType != null and dataType == "0"'>
+                and cuser.id = #{currentUserId}
+            </if>
+            <if test='dataType != null and dataType == "1"'>
+                and dept.id_${deptLayer} = #{deptRId}
+            </if>
+
+            <!-- 过滤出库存产品 -->
+            <if test="'true' == isNeedWarehouseProduct">
+                and prod.id in (
+                    select product_id from vmes_warehouse_product
+                    <where>
+                        <if test="currentCompanyId != null and currentCompanyId != ''" >
+                            and company_id=#{currentCompanyId}
+                        </if>
+                        <if test="warehouseId != null and warehouseId != ''" >
+                            and warehouse_id in (
+                                select id from vmes_warehouse
+                                where company_id=#{currentCompanyId} and path_id LIKE CONCAT(CONCAT('%', #{warehouseId}),'%')
+                            )
+                        </if>
+                        and isdisable = '1'
+
+                    </where>
+                    group by product_id
+                )
+            </if>
+
+            <if test="productId != null and productId != ''">
+                and prod.id = #{productId}
+            </if>
+            <if test="inProductIds != null and inProductIds != ''">
+               and prod.id in (${inProductIds})
+            </if>
+            <if test="notInProductIds != null and notInProductIds != ''">
+                and prod.id not in (${notInProductIds})
+            </if>
+            <if test="sourceCode != null and sourceCode != ''" >
+                and prod.source_code LIKE CONCAT('%',CONCAT(#{sourceCode}),'%')
+            </if>
+            <if test="code != null and code != ''">
+                and ( case when prod.source_code is null then prod.code else prod.source_code end  ) LIKE CONCAT('%',CONCAT(#{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and prod.name LIKE CONCAT('%',CONCAT(#{name}),'%')
+            </if>
+
+            <if test="genreName != null and genreName != ''">
+                and genre.name = #{genreName}
+            </if>
+            <if test="genreNames != null and genreNames != ''">
+                and prod.name LIKE CONCAT('%',CONCAT(#{genreNames}),'%')
+            </if>
+            <if test="property != null and property != ''">
+                and prod.property LIKE CONCAT('%',CONCAT(#{property}),'%')
+            </if>
+
+            <if test="typeName != null and typeName != ''">
+                and type.name LIKE CONCAT('%',CONCAT(#{typeName}),'%')
+            </if>
+            <if test="unitName != null and unitName != ''">
+                and unit.name LIKE CONCAT('%',CONCAT(#{unitName}),'%')
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''" >
+                and prod.company_id=#{currentCompanyId}
+            </if>
+            <if test="spec != null and spec != ''" >
+                and prod.spec LIKE CONCAT('%',CONCAT(#{spec}),'%')
+            </if>
+
+
+            <!--stockCountQuery 库存数量查询-->
+            <!--stockCountQuery:stockCountGreaterThanZero 库存数量大于零-->
+            <if test="'stockCountGreaterThanZero' == stockCountQuery">
+                and prod.stock_count > 0
+            </if>
+            <!--stockCountQuery 库存数量查询-->
+            <!--stockCountQuery:stockCountZero 库存数量等于零-->
+            <if test="'stockCountZero' == stockCountQuery">
+                and prod.stock_count = 0
+            </if>
+            <!--stockCountQuery 库存数量查询-->
+            <!--stockCountQuery:stockCountNotZero 库存数量不等于零-->
+            <if test="'stockCountNotZero' == stockCountQuery">
+                <![CDATA[ and prod.stock_count <> 0 ]]>
+            </if>
+
+            <if test="genre != null and genre != ''" >
+                and prod.genre = #{genre}
+            </if>
+            <!--过滤出 货品属性(备件)-->
+            <if test="'true' == isNeedGenreSpare">
+                and prod.genre = '384cfd1329e648618b5a237ce1038bab'
+            </if>
+            <!--过滤出 货品属性(非备件)-->
+            <if test="'true' == isNeedNotInGenreSpare">
+                <![CDATA[ and prod.genre <> '384cfd1329e648618b5a237ce1038bab' ]]>
+            </if>
+            <!--字典表:4c4bd1b59954438c8bf56facd97a0c7e:货品-->
+            <if test="pid != null and pid != ''and pid != '4c4bd1b59954438c8bf56facd97a0c7e'" >
+                and prod.genre=#{pid}
+            </if>
+
+            <if test="isdisable != null and isdisable != ''" >
+                and prod.isdisable=#{isdisable}
+            </if>
+
+            <if test="lowStock != null and lowStock != '' and 1 == lowStock" >
+                <![CDATA[ and prod.safety_count > prod.stock_count ]]>
+            </if>
+
+            <if test="lowStock != null and lowStock != '' and 0 == lowStock" >
+                <![CDATA[ and prod.safety_count <= prod.stock_count ]]>
+            </if>
+
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+    <!--库存数量-并发(version)控制-->
+    <update id="updateStockCount" parameterType="com.yvan.PageData">
+        update vmes_product
+        set
+        stock_count = ${stockCount},
+        uuser = #{uuser},
+        udate = now(),
+        version = version + 1
+        <where>
+            <if test="id != null and id != ''" >
+                and id=#{id}
+            </if>
+            <if test="version != null and version != ''" >
+                and version=${version}
+            </if>
+        </where>
+    </update>
+
+
+
+</mapper>

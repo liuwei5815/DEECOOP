@@ -1,0 +1,11 @@
+dependencies {
+    compile project(':yvan-platform')
+    compile project(':vmes-contracts')
+
+    compile 'org.crazycake:shiro-redis:2.8.22'
+    compile 'org.apache.shiro:shiro-spring:1.4.0'
+
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+
+
+}

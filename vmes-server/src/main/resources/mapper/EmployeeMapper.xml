@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：vmes_employee:员工管理 Mapper.xml
+创建人：刘威 自动创建
+创建时间：2018-08-02
+ -->
+<mapper namespace="com.xy.vmes.deecoop.system.dao.EmployeeMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_employee
+    </sql>
+
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+		user_id userId,<!-- 系统用户ID -->
+		company_id companyId,<!-- 公司ID-组织架构 -->
+		code code,<!-- 员工编号 -->
+		type type,<!-- 员工类型 数据字典:vmes_dictionary -->
+		name name,<!-- 员工姓名 -->
+		name_en nameEn,<!-- 员工英文名 -->
+		photo photo,<!-- 员工照片 -->
+		icon icon,<!-- 员工图片 -->
+		mobile mobile,<!-- 手机号码 -->
+		email email,<!-- 邮箱地址 -->
+		sex sex,<!-- 性别(1:男0:女)  -->
+		birthday birthday,<!-- 出生日期(yyyy-mm-dd) -->
+		leave_date leaveDate,<!-- 离职日期(yyyy-mm-dd) -->
+		entry_date entryDate,<!-- 入职日期(yyyy-mm-dd) -->
+		native_place nativePlace,<!-- 籍贯 -->
+		political political,<!-- 政治面貌 数据字典:vmes_dictionary -->
+		identity_number identityNumber,<!-- 身份证号 -->
+		marital marital,<!-- 婚姻状况(1:已婚 0:未婚)  -->
+		isdisable isdisable,<!-- 是否禁用(0:已禁用 1:启用)  -->
+		cdate cdate,<!-- 创建时间 -->
+		cuser cuser,<!-- 创建人账号 -->
+		udate udate,<!-- 修改时间 -->
+		uuser uuser,<!-- 修改人账号 -->
+		column_1 column1,<!-- 预留字段 -->
+		column_2 column2,<!-- 预留字段 -->
+		column_3 column3,<!-- 预留字段 -->
+        remark remark,
+        isOpenUser isOpenUser,
+        contract_date contractDate,
+        position position,
+        dormitory dormitory,
+		id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{userId},<!-- 系统用户ID -->
+		#{companyId},<!-- 公司ID-组织架构 -->
+		#{code},<!-- 员工编号 -->
+		#{type},<!-- 员工类型 数据字典:vmes_dictionary -->
+		#{name},<!-- 员工姓名 -->
+		#{nameEn},<!-- 员工英文名 -->
+		#{photo},<!-- 员工照片 -->
+		#{icon},<!-- 员工图片 -->
+		#{mobile},<!-- 手机号码 -->
+		#{email},<!-- 邮箱地址 -->
+		#{sex},<!-- 性别(1:男0:女)  -->
+		#{birthday},<!-- 出生日期(yyyy-mm-dd) -->
+		#{leaveDate},<!-- 离职日期(yyyy-mm-dd) -->
+		#{entryDate},<!-- 入职日期(yyyy-mm-dd) -->
+		#{nativePlace},<!-- 籍贯 -->
+		#{political},<!-- 政治面貌 数据字典:vmes_dictionary -->
+		#{identityNumber},<!-- 身份证号 -->
+		#{marital},<!-- 婚姻状况(1:已婚 0:未婚)  -->
+		#{isdisable},<!-- 是否禁用(0:已禁用 1:启用)  -->
+		#{cdate},<!-- 创建时间 -->
+		#{cuser},<!-- 创建人账号 -->
+		#{udate},<!-- 修改时间 -->
+		#{uuser},<!-- 修改人账号 -->
+		#{column1},<!-- 预留字段 -->
+		#{column2},<!-- 预留字段 -->
+		#{column3},<!-- 预留字段 -->
+        #{remark},
+        #{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="Column">
+        '系统用户ID'  userId,
+        '公司ID-组织架构'  companyId,
+        '员工编号'  code,
+        '员工类型 数据字典:vmes_dictionary'  type,
+        '员工姓名'  name,
+        '员工英文名'  nameEn,
+        '员工照片'  photo,
+        '员工图片'  icon,
+        '手机号码'  mobile,
+        '邮箱地址'  email,
+        '性别(1:男0:女) '  sex,
+        '出生日期(yyyy-mm-dd)'  birthday,
+        '离职日期(yyyy-mm-dd)'  leaveDate,
+        '入职日期(yyyy-mm-dd)'  entryDate,
+        '籍贯'  nativePlace,
+        '政治面貌 数据字典:vmes_dictionary'  political,
+        '身份证号'  identityNumber,
+        '婚姻状况(1:已婚 0:未婚) '  marital,
+        '是否禁用(0:已禁用 1:启用) '  isdisable,
+        '创建时间'  cdate,
+        '创建人账号'  cuser,
+        '修改时间'  udate,
+        '修改人账号'  uuser,
+        '预留字段'  column1,
+        '预留字段'  column2,
+        '预留字段'  column3,
+        '备注' remark,
+        'id' id
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+            <if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+                and
+                (
+                <!--	根据需求自己加检索条件
+                            字段1 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                             or
+                            字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                        -->
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Employee">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+            <if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+                and
+                (
+                <!--	根据需求自己加检索条件
+                            字段1 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                             or
+                            字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                        -->
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+
+
+    <!-- 字段 自动创建，可以修改-->
+    <sql id="Field1">
+        <!-- 显示字段 -->
+        employee.code code,
+        employee.name name,
+        CASE
+          WHEN employee.sex = '0' THEN '女'
+          WHEN employee.sex = '1' THEN '男'
+        ELSE null
+        END sexName,
+        employee.sex sex,
+        dept.name deptName,
+        post.name postName,
+
+        CASE
+          WHEN employpost.isplurality = '0' THEN '是'
+          WHEN employpost.isplurality = '1' THEN '否'
+        ELSE '无'
+        END isplurality,
+        role.name roleName,
+        employee.mobile mobile,
+        employee.email email,
+        employee.birthday birthday,
+
+        employee.entry_date entryDate,
+        employee.native_place nativePlace,
+        dictionary.name politicalName,
+        employee.political,
+        employee.identity_number identityNumber,
+        CASE
+          WHEN employee.marital = '0' THEN '未婚'
+          WHEN employee.marital = '1' THEN '已婚'
+        ELSE null
+        END maritalName,
+        employee.marital,
+
+        employee.cdate,
+        employee.remark,
+        employee.isOpenUser,
+        employee.isdisable,
+
+        <!-- 隐藏字段 -->
+        employpost.id,
+        employee.id employeeId,
+        employpost.id employPostId,
+        <!-- 员工岗位id -->
+        post.id postId,
+        dept.id deptId,
+        role.id roleId,
+
+        employee.user_id userId,
+        employee.cuser,
+        employee.company_id companyId,
+        employee.icon,
+        employee.photo,
+        <!-- 获取主岗id-是否兼岗(1:兼岗0:主岗)-->
+        CASE
+          WHEN employpost.isplurality = '0' THEN employpost.post_id
+          ELSE null
+        END mainPostId,
+        <!-- 获取兼岗id-是否兼岗(1:兼岗0:主岗)-->
+        CASE
+          WHEN employpost.isplurality = '1' THEN employpost.post_id
+        ELSE null
+        END otherPostId
+</sql>
+
+<!-- 字段值 自动创建，可以修改-->
+    <sql id="Column1">
+            '员工号'  code,
+            '员工姓名'  name,
+            '性别'  sexName,
+            '部门名称' deptName,
+            '岗位名称' postName,
+
+            '是否主岗' isplurality,
+            '角色名称' roleName,
+            '手机号码'  mobile,
+            '邮箱地址'  email,
+            '出生日期'  birthday,
+
+            '入职日期'  entryDate,
+            '籍贯'  nativePlace,
+            '政治面貌'  politicalName,
+            '身份证号'  identityNumber,
+            '婚姻状况'  maritalName,
+
+            '创建时间'  cdate,
+            '创建人账号'  cuser,
+            '备注' remark,
+            '是否在职'  isdisable,
+
+            'sex' sex_hide,
+            'political' political_hide,
+            'marital'  marital_hide,
+            'postId' postId_hide,
+            'deptId' deptId,
+            'userId' userId_hide,
+            'roleId' roleId_hide,
+            'employPostId' employPostId_hide,
+            'employeeId' employeeId_hide
+    </sql>
+
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+            <include refid="Field1"/>
+        from vmes_employee employee
+            left join vmes_employ_post employpost on employpost.employ_id = employee.id
+            left join vmes_post post on post.id = employpost.post_id
+            left join vmes_department dept on dept.id = post.dept_id
+            left join vmes_user vmesuser on vmesuser.id = employee.user_id
+            left join vmes_user_role userrole on userrole.user_id = vmesuser.id
+            left join vmes_role role on role.id = userrole.role_id
+            left join vmes_dictionary dictionary on employee.political = dictionary.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and employee.company_id = #{currentCompanyId}
+            </if>
+            <if test="isdisable!= null and isdisable != ''"><!-- 默认值是0 -->
+                and employee.isdisable = #{isdisable}
+            </if>
+            <if test="userId!= null and userId != ''"><!-- 默认值是0 -->
+                and employee.user_id = #{userId}
+            </if>
+            <if test="isplurality!= null and isplurality != ''"><!-- 默认值是0 -->
+                and employee.isplurality = #{isplurality}
+            </if>
+            <if test="postId!= null and postId != ''"><!-- 默认值是0 -->
+                and post.id = #{postId}
+            </if>
+            <if test="deptId!= null and deptId != '' and layer != null and layer != ''"><!-- 关键词检索 -->
+                and dept.id_${layer} = #{deptId}
+            </if>
+            <if test="postName!= null and postName != ''"><!-- 关键词检索 -->
+                and post.name LIKE CONCAT(CONCAT('%', #{postName}),'%')
+            </if>
+            <if test="code!= null and code != ''"><!-- 关键词检索 -->
+                and employee.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name!= null and name != ''"><!-- 关键词检索 -->
+                and employee.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="mobile!= null and mobile != ''"><!-- 关键词检索 -->
+                and employee.mobile LIKE CONCAT(CONCAT('%', #{mobile}),'%')
+            </if>
+            <if test="identityNumber!= null and identityNumber != ''"><!-- 关键词检索 -->
+                and employee.identity_number LIKE CONCAT(CONCAT('%', #{identityNumber}),'%')
+            </if>
+            <if test="entryDateEnd!= null and entryDateEnd != ''"><!-- 关键词检索 -->
+                <![CDATA[ and  employee.entry_date <= #{entryDateEnd} ]]>
+            </if>
+            <if test="entryDateStart!= null and entryDateStart != ''"><!-- 关键词检索 -->
+                <![CDATA[ and  employee.entry_date >= #{entryDateStart} ]]>
+            </if>
+            <if test="pid!= null and pid != '' and layer != null"><!-- 关键词检索 -->
+                and  dept.id_${layer} = #{pid}
+            </if>
+            <if test="pid!= null and pid != '' and layer == null"><!-- 关键词检索 -->
+                and post.id = #{pid}
+            </if>
+        </where>
+            order by employee.cdate desc
+    </select>
+
+
+    <!-- 自动创建，可以修改 -->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        <include refid="tableName"></include>
+        set isdisable = 0,leave_date = now(),udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+
+    <!-- 自动创建，可以修改-->
+    <sql id="Field2">
+        employee.code code,<!-- 员工编号 -->
+        employee.name name,<!-- 员工姓名 -->
+        employee.mobile mobile,<!-- 手机号码 -->
+        employee.email email,<!-- 邮箱地址 -->
+        employee.sex sex,<!-- 性别(1:男0:女)  -->
+        employee.birthday birthday,<!-- 出生日期(yyyy-mm-dd) -->
+        employee.entry_date entryDate,<!-- 入职日期(yyyy-mm-dd) -->
+        employee.native_place nativePlace,<!-- 籍贯 -->
+        employee.political political,<!-- 政治面貌 数据字典:vmes_dictionary -->
+        employee.identity_number identityNumber,<!-- 身份证号 -->
+        employee.marital marital,<!-- 婚姻状况(1:已婚 0:未婚)  -->
+        employee.isdisable isdisable,<!-- 是否禁用(1:已禁用 0:启用)  -->
+        employee.cdate cdate,<!-- 创建时间 -->
+        employee.cuser cuser,<!-- 创建人账号 -->
+        employee.isOpenUser,
+        post.id postId,<!-- 岗位ID -->
+        post.name postName,<!-- 岗位名称 -->
+        dept.id deptId,<!-- 部门ID -->
+        dept.name deptName,<!-- 部门名称 -->
+        vmesuser.id userId,<!-- 用户ID -->
+        vmesuser.user_code userCode,<!-- 用户账号 -->
+        role.id roleId,<!-- 角色ID -->
+        role.name roleName,<!-- 角色名称 -->
+        employpost.id id, <!-- employPostId -->
+        employpost.id employPostId, <!-- employPostId -->
+        employee.id employeeId <!-- employeeId -->
+    </sql>
+
+
+
+    <!-- 字段 自动创建，可以修改-->
+    <sql id="Column2">
+            '员工号'  code,
+            '员工姓名'  name,
+            '手机号码'  mobile,
+            '邮箱地址'  email,
+            '性别'  sex,
+            '出生日期'  birthday,
+            '入职日期'  entryDate,
+            '籍贯'  nativePlace,
+            '政治面貌'  political,
+            '身份证号'  identityNumber,
+            '婚姻状况'  marital,
+            '是否在职'  isdisable,
+            '创建时间'  cdate,
+            '创建人账号'  cuser,
+            '岗位ID' postId,
+            '岗位名称' postName,
+            '部门ID' deptId,
+            '部门名称' deptName,
+            '用户ID' userId,
+            '用户账号' userCode,
+            '角色ID' roleId,
+            '角色名称' roleName,
+            'employPostId' employPostId,
+            'employeeId' employeeId
+    </sql>
+
+    <!-- 字段值 自动创建，可以修改-->
+    <select id="selectEmployeeAndUserById"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field2"></include>
+        from
+        vmes_employee  employee
+        left join vmes_employ_post  employpost on employpost.employ_id = employee.id
+        left join vmes_post post on post.id = employpost.post_id
+        left join vmes_department dept on dept.id = post.dept_id
+        left join vmes_user vmesuser on vmesuser.id = employee.user_id
+        left join vmes_user_role userrole on userrole.user_id = vmesuser.id
+        left join vmes_role role on role.id = userrole.role_id
+        where employpost.id = #{employPostId}
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'employee' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+        (replace(uuid(), '-', ''), 'employee', 'code', '员工编号', 1, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'name', '员工姓名', 2, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'sexName', '性别', 3, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'sex', '性别', 3, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'deptName', '部门', 4, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'postName', '岗位', 5, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'isplurality', '岗位属性', 6, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'roleName', '角色名称', 7, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'mobile', '手机号', 8, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'email', '邮箱', 9, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'birthday', '出生日期', 10, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'entryDate', '入职日期', 11, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'nativePlace', '籍贯', 12, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'political', '政治面貌', 13, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'politicalName', '政治面貌', 13, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'identityNumber', '身份证号', 14, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'marital', '婚姻状况', 15, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'maritalName', '婚姻状况', 15, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'cdate', '创建时间', 16, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'remark', '备注', 17, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'cuser', '创建人', 18, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'id', 'id', 19, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'employPostId', '用户岗位id', 20, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'postId', '岗位id', 21, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'deptId', '部门id', 22, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'isdisable', '是否在职', 23, '1', '1', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'roleId', '角色id', 23, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'userId', '用户id', 25, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'companyId', '企业id', 26, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'nameEn', '员工英文名', 27, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'leaveDate', '离职日期', 28, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'icon', '员工图片', 29, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'photo', '员工照片', 30, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'udate', '修改时间', 31, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'uuser', '修改人id', 32, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'employeeId', '员工id', 33, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'isdisableName', '是否在职', 23, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+
+        (replace(uuid(), '-', ''), 'employee', 'contractDate', '同到期日期', 34, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'contractDay', '距合同到期天数', 35, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+
+        (replace(uuid(), '-', ''), 'employee', 'position', '工作位置', 36, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+        (replace(uuid(), '-', ''), 'employee', 'dormitory', '宿舍', 37, '1', '0', '1', '0', '2018-8-28 09:10:24', 'admin'),
+    </insert>
+
+    <select id="getDataListPage"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        employee.code code,
+        employee.name name,
+        CASE
+        WHEN employee.sex = '0' THEN '女'
+        WHEN employee.sex = '1' THEN '男'
+        ELSE null
+        END sexName,
+        employee.sex sex,
+        dept.name deptName,
+        post.name postName,
+
+        CASE
+        WHEN employpost.isplurality = '0' THEN '是'
+        WHEN employpost.isplurality = '1' THEN '否'
+        ELSE '无'
+        END isplurality,
+        role.name roleName,
+        employee.mobile mobile,
+        employee.email email,
+        employee.birthday birthday,
+
+        employee.entry_date entryDate,
+        employee.native_place nativePlace,
+        dictionary.name politicalName,
+        employee.political,
+        employee.identity_number identityNumber,
+        CASE
+        WHEN employee.marital = '0' THEN '未婚'
+        WHEN employee.marital = '1' THEN '已婚'
+        ELSE null
+        END maritalName,
+        employee.marital,
+
+        employee.cdate,
+        employee.remark,
+        employee.isOpenUser,
+        employee.isdisable,
+
+        employee.position position,
+        employee.dormitory dormitory,
+
+        <!-- 隐藏字段 -->
+        employpost.id,
+        employee.id employeeId,
+        employpost.id employPostId,
+        <!-- 员工岗位id -->
+        post.id postId,
+        dept.id deptId,
+        role.id roleId,
+
+        employee.user_id userId,
+        employee.cuser,
+        employee.company_id companyId,
+        employee.icon,
+        employee.photo,
+
+        CASE
+        WHEN employee.isdisable = '0' THEN '离职'
+        WHEN employee.isdisable = '1' THEN '在职'
+        ELSE null
+        END isdisableName,
+
+        DATE_FORMAT(employee.contract_date, '%Y-%m-%d') contractDate,
+        employeeContract.contractDay,
+
+        <!-- 获取主岗id-是否兼岗(1:兼岗0:主岗)-->
+        CASE
+        WHEN employpost.isplurality = '0' THEN employpost.post_id
+        ELSE null
+        END mainPostId,
+        <!-- 获取兼岗id-是否兼岗(1:兼岗0:主岗)-->
+        CASE
+        WHEN employpost.isplurality = '1' THEN employpost.post_id
+        ELSE null
+        END otherPostId
+        from vmes_employee employee
+        left join vmes_employ_post employpost on employpost.employ_id = employee.id and employpost.isdisable = '1'
+        left join vmes_post post on post.id = employpost.post_id
+        left join vmes_department dept on dept.id = post.dept_id
+        left join vmes_user vmesuser on vmesuser.id = employee.user_id
+        left join vmes_user_role userrole on userrole.user_id = vmesuser.id
+        left join vmes_role role on role.id = userrole.role_id
+        left join vmes_dictionary dictionary on employee.political = dictionary.id
+        left join (
+            select
+            id,
+            <!-- 合同到期天数计算: (合同到期日期 - 当前日期)-->
+            CASE
+              WHEN contract_date is null THEN 999999
+              WHEN contract_date is not null THEN datediff(DATE_FORMAT(contract_date, '%Y-%m-%d'), DATE_FORMAT(now(),'%Y-%m-%d'))
+            ELSE null
+            END contractDay
+            from vmes_employee
+            <where>
+                <if test="currentCompanyId != null and currentCompanyId != ''">
+                    and company_id = #{currentCompanyId}
+                </if>
+
+            </where>
+        ) employeeContract on employee.id = employeeContract.id
+
+
+        left join vmes_user cuser on employee.cuser = cuser.id
+        left join vmes_department udept on cuser.dept_id = udept.id
+        <where>
+
+
+
+            <if test='dataType != null and dataType == "0"'>
+                and cuser.id = #{currentUserId}
+            </if>
+            <if test='dataType != null and dataType == "1"'>
+                and udept.id_${deptLayer} = #{deptRId}
+            </if>
+
+
+            <if test="employeeId!= null and employeeId != ''">
+                and employee.id = #{employeeId}
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and employee.company_id = #{currentCompanyId}
+            </if>
+
+            <!-- 员工表查询 (code,name) 必须在最前面-创建有索引 -->
+            <if test="code!= null and code != ''">
+                and employee.code LIKE CONCAT(CONCAT(#{code}),'%')
+            </if>
+            <if test="name!= null and name != ''">
+                and employee.name LIKE CONCAT(CONCAT(#{name}),'%')
+            </if>
+            <if test="isdisable!= null and isdisable != ''">
+                and employee.isdisable = #{isdisable}
+            </if>
+            <if test="mobile!= null and mobile != ''">
+                and employee.mobile LIKE CONCAT(CONCAT('%', #{mobile}),'%')
+            </if>
+            <if test="identityNumber!= null and identityNumber != ''">
+                and employee.identity_number LIKE CONCAT(CONCAT('%', #{identityNumber}),'%')
+            </if>
+            <if test="entryDateEnd!= null and entryDateEnd != ''">
+                <![CDATA[ and  employee.entry_date <= #{entryDateEnd} ]]>
+            </if>
+            <if test="entryDateStart!= null and entryDateStart != ''">
+                <![CDATA[ and  employee.entry_date >= #{entryDateStart} ]]>
+            </if>
+
+            <!--岗位表 -->
+            <if test="postId != null and postId != ''">
+                and post.id = #{postId}
+            </if>
+            <if test="postName!= null and postName != ''">
+                and post.name LIKE CONCAT(CONCAT(#{postName}),'%')
+            </if>
+            <if test="deptId!= null and deptId != ''">
+                and post.dept_id = #{deptId}
+            </if>
+            <if test="pid!= null and pid != '' and layer == '' ">
+                and post.id = #{pid}
+            </if>
+            <if test="pid!= null and pid != '' and layer != null and layer != ''">
+                and  dept.id_${layer} = #{pid}
+            </if>
+
+            <!--deptQueryStr 部门表查询字符串 and id_1 = '' -->
+            <if test="deptQueryStr != null and deptQueryStr!=''" >
+                and ${deptQueryStr}
+            </if>
+            <!-- 员工岗位表 是否主岗或兼岗 -->
+            <if test="isplurality!= null and isplurality != ''">
+                and employpost.isplurality = #{isplurality}
+            </if>
+
+            <!-- 员工合同到期日期 -->
+            <if test="contractDateBegin != null and contractDateBegin != ''">
+                <![CDATA[ and employee.contract_date >= #{contractDateBegin} ]]>
+            </if>
+            <if test="contractDateEnd != null and contractDateEnd != ''">
+                <![CDATA[ and employee.contract_date <= #{contractDateEnd} ]]>
+            </if>
+
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Employee">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id!=''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="currentCompanyId != null and currentCompanyId != ''">
+                        and company_id = #{currentCompanyId}
+                    </if>
+                    <if test="userId != null and userId != ''" >
+                        and user_id = #{userId}
+                    </if>
+                    <if test="code != null and code != ''" >
+                        and code = #{code}
+                    </if>
+                    <if test="name != null and name != ''" >
+                        and name = #{name}
+                    </if>
+                    <if test="isdisable != null and isdisable!=''" >
+                        and isdisable = #{isdisable}
+                    </if>
+                    <if test="mobile != null and mobile != ''" >
+                        and mobile = #{mobile}
+                    </if>
+                    <if test="political != null and political != ''" >
+                        and political = #{political}
+                    </if>
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr!=''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>

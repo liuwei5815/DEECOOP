@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：vmes_role:角色 Mapper.xml
+创建人：陈刚 自动创建
+创建时间：2018-07-30
+ -->
+<mapper namespace="com.xy.vmes.deecoop.system.dao.RoleMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_role
+    </sql>
+
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+		company_id companyId,<!-- 公司ID-组织架构 -->
+        code code,
+        name name,<!-- 角色名称 -->
+        name_en nameEn,
+		isdisable isdisable,<!-- 是否禁用(1:已禁用 0:启用) 数据字典:sys_isdisable -->
+		cdate cdate,<!-- 创建时间 -->
+		cuser cuser,<!-- 创建人账号 -->
+		udate udate,<!-- 修改时间 -->
+		uuser uuser,<!-- 修改人账号 -->
+        remark remark,
+		id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{companyId},<!-- 公司ID-组织架构 -->
+        #{code},
+		#{name},<!-- 角色名称 -->
+        #{nameEn},
+        #{isdisable},<!-- 是否禁用(1:已禁用 0:启用) 数据字典:sys_isdisable -->
+		#{cdate},<!-- 创建时间 -->
+		#{cuser},<!-- 创建人账号 -->
+		#{udate},<!-- 修改时间 -->
+		#{uuser},<!-- 修改人账号 -->
+        #{remark},
+		#{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="Column">
+        '公司ID-组织架构'  companyId,
+        '角色编码' code,
+        '角色名称'  name,
+        '英文名称'  nameEn,
+        '是否禁用(1:已禁用 0:启用) 数据字典:sys_isdisable'  isdisable,
+        '创建时间'  cdate,
+        '创建人账号'  cuser,
+        '修改时间'  udate,
+        '修改人账号'  uuser,
+        '备注'  remark,
+        'id' id
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and company_id = #{currentCompanyId}
+            </if>
+
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+            <if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+                and
+                (
+                <!--	根据需求自己加检索条件
+                            字段1 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                             or
+                            字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                        -->
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Role">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+            <if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+                and
+                (
+                <!--	根据需求自己加检索条件
+                            字段1 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                             or
+                            字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+                        -->
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Role">
+        select
+            <include refid="Field"></include>
+        from
+            <include refid="tableName"></include>
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id !=''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="code != null and code != ''" >
+                        and code = #{code}
+                    </if>
+                    <if test="name != null and name != ''" >
+                        and name = #{name}
+                    </if>
+                    <if test="currentCompanyId != null and currentCompanyId != ''">
+                        and company_id = #{currentCompanyId}
+                    </if>
+                    <if test="cuser != null and cuser != ''" >
+                        and cuser = #{cuser}
+                    </if>
+                    <if test="isdisable != null and isdisable != ''" >
+                        and isdisable = #{isdisable}
+                    </if>
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr != ''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+    <sql id="RoleColumn">
+        <!--查询隐藏字段-->
+        'id' id_hide,
+        'companyID' companyID_hide,
+        'nameEn' nameEn_hide,
+        'cdate' cdate_hide,
+        'cuser' cuser_hide,
+
+        'udate' udate_hide,
+        'uuser' uuser_hide,
+
+        <!--查询显示字段-->
+        '角色编码' code,
+        '角色名称' name,
+        '是否启用' isdisable
+
+    </sql>
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+            <include refid="RoleColumn" />
+        from dual
+    </select>
+
+    <sql id="RoleField">
+        <!--查询隐藏字段-->
+        id id,
+        company_id companyId,
+        name_en nameEn,
+        DATE_FORMAT(cdate,'%Y-%m-%d %T') cdate,
+        cuser,
+
+        DATE_FORMAT(udate,'%Y-%m-%d %T') udate,
+        uuser,
+
+        <!--查询显示字段-->
+        code code,
+        name name,
+        remark remark,
+        isdisable
+    </sql>
+    <select id="getDataListPage" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+        a.id id,
+        a.company_id companyId,
+        a.name_en nameEn,
+        DATE_FORMAT(a.cdate,'%Y-%m-%d %T') cdate,
+        a.cuser,
+
+        DATE_FORMAT(a.udate,'%Y-%m-%d %T') udate,
+        a.uuser,
+        a.code code,
+        a.name name,
+        a.remark remark,
+
+        a.isdisable,
+
+        company.code companyCode,
+        company.name companyName
+
+        from vmes_role a
+        left join vmes_department company on a.company_id = company.id
+        <where>
+            <!--isSelfExist 是否考虑自己在业务表中是否存在
+                false: (false or is null) 无需考虑自己在业务表中是否存在
+                true : 需要考虑自己在业务表中是否存在
+            -->
+            <if test="code != null and code != ''"><!-- 关键词检索 -->
+                and a.code LIKE CONCAT(CONCAT(#{code}),'%')
+            </if>
+            <if test="name != null and name != ''"><!-- 关键词检索 -->
+                and a.name LIKE CONCAT(CONCAT(#{name}),'%')
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''">
+                and a.company_id = #{currentCompanyId}
+            </if>
+            <if test="cuser != null and cuser != ''" >
+                and a.cuser = #{cuser}
+            </if>
+            <if test="isdisable != null and isdisable != ''" >
+                and a.isdisable = #{isdisable}
+            </if>
+
+            <if test="companyCode != null and companyCode != ''">
+                and company.code LIKE CONCAT(CONCAT(#{companyCode}),'%')
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and company.name LIKE CONCAT(CONCAT(#{companyName}),'%')
+            </if>
+
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <update id="updateDisableByIds" parameterType="java.lang.String" >
+        update <include refid="tableName" />
+        set isdisable = 0
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <insert id="insertColumn" >
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+        ('c9578799a8ce11e884ad00163e105f05', 'role', 'code', '角色编码', 1, '1', '1', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c95783a1a8ce11e884ad00163e105f05', 'role', 'name', '角色名称', 2, '1', '1', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c95788e7a8ce11e884ad00163e105f05', 'role', 'remark', '备注', 3, '1', '1', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c95784b4a8ce11e884ad00163e105f05', 'role', 'isdisable', '是否启用', 4, '1', '1', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c957898ba8ce11e884ad00163e105f05', 'role', 'id', 'id', 5, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c9578031a8ce11e884ad00163e105f05', 'role', 'companyId', '公司id', 6, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c957843ba8ce11e884ad00163e105f05', 'role', 'nameEn', '英文名称', 7, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c95785d1a8ce11e884ad00163e105f05', 'role', 'cdate', '创建时间', 8, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c9578661a8ce11e884ad00163e105f05', 'role', 'cuser', '创建人id', 9, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c95786c7a8ce11e884ad00163e105f05', 'role', 'udate', '修改时间', 10, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin'),
+        ('c9578727a8ce11e884ad00163e105f05', 'role', 'uuser', '修改人id', 11, '1', '0', '1', '0', '2018-8-26 09:24:32', 'admin')
+
+        (replace(uuid(), '-', ''), 'role', 'companyCode', '企业编码', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin')
+        (replace(uuid(), '-', ''), 'role', 'companyName', '企业名称', 30, '1', '0', '1', '0', '2018-12-5 17:01:51', 'admin')
+    </insert>
+
+
+</mapper>

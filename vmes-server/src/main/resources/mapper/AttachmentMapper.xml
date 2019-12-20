@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：vmes_attachment:附件管理 Mapper.xml
+创建人：刘威 自动创建
+创建时间：2019-05-13
+ -->
+<mapper namespace="com.xy.vmes.deecoop.fileIO.dao.AttachmentMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_attachment
+    </sql>
+
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+		company_id companyId,<!-- 企业id -->
+		business_id businessId,<!-- 业务id -->
+		url url,<!-- 路径 -->
+		name name,<!-- 文件名称 -->
+		remark remark,<!-- 备注 -->
+		cuser cuser,<!-- 创建用户id -->
+		cdate cdate,<!-- 创建时间 -->
+		uuser uuser,<!-- 修改用户id -->
+		udate udate,<!-- 修改时间 -->
+		isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+		id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{companyId},<!-- 企业id -->
+		#{businessId},<!-- 业务id -->
+		#{url},<!-- 路径 -->
+		#{name},<!-- 文件名称 -->
+		#{remark},<!-- 备注 -->
+		#{cuser},<!-- 创建用户id -->
+		#{cdate},<!-- 创建时间 -->
+		#{uuser},<!-- 修改用户id -->
+		#{udate},<!-- 修改时间 -->
+		#{isdisable},<!-- 是否启用(0:已禁用 1:启用) -->
+		#{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段名称  '_hide' 表示前端列表隐藏 自动创建，禁止修改-->
+    <sql id="Column">
+        '企业id'  companyId,
+        '业务id'  businessId,
+        '路径'  url,
+        '文件名称'  name,
+        '备注'  remark,
+        '创建用户id'  cuser,
+        '创建时间'  cdate,
+        '修改用户id'  uuser,
+        '修改时间'  udate,
+        '是否启用(0:已禁用 1:启用)'  isdisable,
+        'id' id_hide
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="datalistPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Attachment">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        <include refid="tableName"></include>
+        set isdisable = '0' ,udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateByDefined" parameterType="com.yvan.PageData" >
+        update
+        <include refid="tableName"></include>
+        set  ${updateStr} ,udate = now()
+        where
+        ${queryStr}
+    </update>
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'attachment' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+            (replace(uuid(), '-', ''),'attachment','companyId','企业id',1, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','businessId','业务id',2, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','name','文件名称',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','url','路径',4, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','relativeUrl','相对路径',5, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','remark','备注',6, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','cuser','创建用户id',7, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','cdate','创建时间',8, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','uuser','修改用户id',9, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','udate','修改时间',10, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','isdisable','是否启用(0:已禁用 1:启用)',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'attachment','id','id',0, '1','0','1','0',now(), 'admin')
+    </insert>
+
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Attachment">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--isSelfExist 是否考虑自己在业务表中是否存在
+                false: (false or is null) 无需考虑自己在业务表中是否存在
+                true : 需要考虑自己在业务表中是否存在
+            -->
+            <if test="id != null and id != ''" >
+                <choose>
+                    <when test="'true' == isSelfExist">
+                        <![CDATA[ and id <> #{id} ]]>
+                    </when>
+                    <otherwise>
+                        and id = #{id}
+                    </otherwise>
+                </choose>
+            </if>
+
+
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+
+    <!-- 字段 自动创建，可以修改-->
+    <sql id="Field1">
+        company_id companyId,<!-- 企业id -->
+        business_id businessId,<!-- 业务id -->
+        url url,<!-- 路径 -->
+        substring_index(url,substring_index(url,'/',-1),1) relativeUrl,
+        name name,<!-- 文件名称 -->
+        remark remark,<!-- 备注 -->
+        cuser cuser,<!-- 创建用户id -->
+        DATE_FORMAT(cdate,'%Y-%m-%d') cdate,<!-- 创建时间 -->
+        uuser uuser,<!-- 修改用户id -->
+        udate udate,<!-- 修改时间 -->
+        isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+        id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，可以修改-->
+    <!--
+    <sql id="Column1">
+            '企业id'  companyId,
+            '业务id'  businessId,
+            '路径'  url,
+            '文件名称'  name,
+            '备注'  remark,
+            '创建用户id'  cuser,
+            '创建时间'  cdate,
+            '修改用户id'  uuser,
+            '修改时间'  udate,
+            '是否启用(0:已禁用 1:启用)'  isdisable,
+            'id' id_hide
+    </sql>
+     -->
+
+    <!-- 自动创建，可以修改 -->
+    <!--
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"></include>
+        from dual
+    </select>
+    -->
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and company_id LIKE CONCAT(CONCAT('%', #{companyId}),'%')
+            </if>
+            <if test="businessId != null and businessId != ''">
+                and business_id LIKE CONCAT(CONCAT('%', #{businessId}),'%')
+            </if>
+            <if test="url != null and url != ''">
+                and url LIKE CONCAT(CONCAT('%', #{url}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataListPage"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and company_id LIKE CONCAT(CONCAT('%', #{companyId}),'%')
+            </if>
+            <if test="businessId != null and businessId != ''">
+                and business_id LIKE CONCAT(CONCAT('%', #{businessId}),'%')
+            </if>
+            <if test="url != null and url != ''">
+                and url LIKE CONCAT(CONCAT('%', #{url}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+
+</mapper>

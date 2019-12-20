@@ -1,0 +1,18 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{15}) - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="INFO">
+        <!-- 日志输出级别 -->
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="org.apache.shiro.session.mgt.AbstractValidatingSessionManager">
+    </logger>
+
+</configuration>

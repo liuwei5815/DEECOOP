@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+说明：操作日志 Mapper.xml
+创建人：刘威 自动创建
+创建时间：2018-09-20
+ -->
+<mapper namespace="com.xy.vmes.deecoop.base.dao.EquipmentMapper">
+
+    <!--表名 自动创建，禁止修改-->
+    <sql id="tableName">
+	vmes_equipment
+    </sql>
+
+    <!-- 字段 自动创建，禁止修改-->
+    <sql id="Field">
+		company_id companyId,<!-- 公司ID-组织架构 -->
+		qrcode qrcode,<!-- 二维码-(图片相对路径) -->
+		code code,<!-- 产品编码 -->
+		name name,<!-- 产品名称 -->
+		name_en nameEn,<!-- 英文名称 -->
+		spec spec,<!-- 规格型号 -->
+		type type,<!-- 类型(字典表-vmes_dictionary.id) -->
+		supplier supplier,<!-- 厂商名称 -->
+		dept_id deptId,<!-- 所属部门id -->
+		buy_date buyDate,<!-- 采购日期(yyyy-mm-dd) -->
+		remark remark,<!-- 备注 -->
+		cuser cuser,<!-- 创建用户id -->
+		cdate cdate,<!-- 创建时间 -->
+		uuser uuser,<!-- 修改用户id -->
+		udate udate,<!-- 修改时间 -->
+		isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+        photo photo,
+		id id <!-- id -->
+    </sql>
+
+    <!-- 字段值 自动创建，禁止修改-->
+    <sql id="FieldValue">
+		#{companyId},<!-- 公司ID-组织架构 -->
+		#{qrcode},<!-- 二维码-(图片相对路径) -->
+		#{code},<!-- 产品编码 -->
+		#{name},<!-- 产品名称 -->
+		#{nameEn},<!-- 英文名称 -->
+		#{spec},<!-- 规格型号 -->
+		#{type},<!-- 类型(字典表-vmes_dictionary.id) -->
+		#{supplier},<!-- 厂商名称 -->
+		#{deptId},<!-- 所属部门id -->
+		#{buyDate},<!-- 采购日期(yyyy-mm-dd) -->
+		#{remark},<!-- 备注 -->
+		#{cuser},<!-- 创建用户id -->
+		#{cdate},<!-- 创建时间 -->
+		#{uuser},<!-- 修改用户id -->
+		#{udate},<!-- 修改时间 -->
+		#{isdisable},<!-- 是否启用(0:已禁用 1:启用) -->
+        #{photo},
+		#{id} <!-- id -->
+    </sql>
+
+
+    <!-- 字段名称  '_hide' 表示前端列表隐藏 自动创建，禁止修改-->
+    <sql id="Column">
+        '公司ID-组织架构'  companyId,
+        '二维码-(图片相对路径)'  qrcode,
+        '设备编码'  code,
+        '设备名称'  name,
+        '英文名称'  nameEn,
+        '设备型号'  spec,
+        '类型(字典表-vmes_dictionary.id)'  type,
+        '厂商名称'  supplier,
+        '所属部门id'  deptId,
+        '采购日期(yyyy-mm-dd)'  buyDate,
+        '备注'  remark,
+        '创建用户id'  cuser,
+        '创建时间'  cdate,
+        '修改用户id'  uuser,
+        '修改时间'  udate,
+        '是否启用(0:已禁用 1:启用)'  isdisable,
+        '设备图片' photo,
+        'id' id_hide
+    </sql>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column"></include>
+        from dual
+    </select>
+
+    <!-- 自动创建，禁止修改 -->
+    <select id="findDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 列表 自动创建，禁止修改-->
+    <select id="dataListPage" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Equipment">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr!=''" >
+                and ${queryStr}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 批量删除 自动创建，禁止修改-->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		#{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 自动创建，禁止修改-->
+    <update id="updateToDisableByIds" parameterType="java.lang.String" >
+        update
+        <include refid="tableName"></include>
+        set isdisable = '0' ,udate = now()
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </update>
+
+
+
+    <!-- ***************************************************以上为自动生成代码禁止修改，请在下面添加业务代码************************************************* -->
+    <insert id="insertColumn" >
+        delete from vmes_column where model_code = 'Equipment' ;
+        insert into vmes_column (
+        id,model_code,title_key,title_name,serial_number,
+        isdisable,ishide,isedit,ismust,cdate,
+        cuser
+        ) VALUES
+            (replace(uuid(), '-', ''),'Equipment','companyId','公司ID-组织架构',1, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','qrcode','二维码-(图片相对路径)',2, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','code','设备编码',3, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','name','设备名称',4, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','nameEn','英文名称',5, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','spec','设备型号',6, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','typeName','设备类型',7, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','type','设备类型ID',8, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','supplier','厂商名称',9, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','deptName','所属部门',10, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','deptId','所属部门id',11, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','buyDate','采购日期',12, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','isdisable','是否启用',13, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','remark','备注',14, '1','1','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','cuser','创建用户id',15, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','cdate','创建时间',16, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','uuser','修改用户id',17, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','udate','修改时间',18, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','photo','设备图片',19, '1','0','1','0',now(), 'admin'),
+            (replace(uuid(), '-', ''),'Equipment','id','id',0, '1','0','1','0',now(), 'admin')
+    </insert>
+
+
+    <!-- 列表(全部) 自动创建，禁止修改-->
+    <select id="dataList" parameterType="com.yvan.PageData" resultType="com.xy.vmes.entity.Equipment">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        <choose>
+            <!--
+                mapSize (0 or is null) 无查询参数-业务层传入
+                isQueryAll 是否查询全部
+                fasle: (false or is null) 无查询条件-查询结果集返回空或list.size()==0
+                true : 无查询条件-返回全部业务表数据
+            -->
+            <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
+                where 1=2
+            </when>
+            <otherwise>
+                <where>
+                    <!--isSelfExist 是否考虑自己在业务表中是否存在
+                        false: (false or is null) 无需考虑自己在业务表中是否存在
+                        true : 需要考虑自己在业务表中是否存在
+                    -->
+                    <if test="id != null and id != ''" >
+                        <choose>
+                            <when test="'true' == isSelfExist">
+                                <![CDATA[ and id <> #{id} ]]>
+                            </when>
+                            <otherwise>
+                                and id = #{id}
+                            </otherwise>
+                        </choose>
+                    </if>
+
+                    <if test="type != null and type != ''" >
+                        and type=#{type}
+                    </if>
+                    <if test="isdisable != null and isdisable != ''" >
+                        and isdisable=#{isdisable}
+                    </if>
+
+                    <!--queryStr 自定义sql查询语句-->
+                    <if test="queryStr != null and queryStr != ''" >
+                        and ${queryStr}
+                    </if>
+                </where>
+            </otherwise>
+        </choose>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+
+
+    <!-- 字段 自动创建，可以修改-->
+    <sql id="Field1">
+        equipment.company_id companyId,<!-- 公司ID-组织架构 -->
+        equipment.qrcode qrcode,<!-- 二维码-(图片相对路径) -->
+        equipment.code code,<!-- 产品编码 -->
+        equipment.name name,<!-- 产品名称 -->
+        equipment.name_en nameEn,<!-- 英文名称 -->
+        equipment.spec spec,<!-- 规格型号 -->
+        equipment.type type,<!-- 类型(字典表-vmes_dictionary.id) -->
+        equipment.supplier supplier,<!-- 厂商名称 -->
+        equipment.dept_id deptId,<!-- 所属部门id -->
+        equipment.buy_date buyDate,<!-- 采购日期(yyyy-mm-dd) -->
+        equipment.remark remark,<!-- 备注 -->
+        equipment.cuser cuser,<!-- 创建用户id -->
+        equipment.cdate cdate,<!-- 创建时间 -->
+        equipment.uuser uuser,<!-- 修改用户id -->
+        equipment.udate udate,<!-- 修改时间 -->
+        equipment.isdisable isdisable,<!-- 是否启用(0:已禁用 1:启用) -->
+        equipment.photo photo,
+        equipment.id id, <!-- id -->
+
+
+        type.name typeName,
+        department.name deptName
+    </sql>
+
+    <!-- 字段值 自动创建，可以修改-->
+    <!--
+    <sql id="Column1">
+            '公司ID-组织架构'  companyId,
+            '二维码-(图片相对路径)'  qrcode,
+            '产品编码'  code,
+            '产品名称'  name,
+            '英文名称'  nameEn,
+            '规格型号'  spec,
+            '类型(字典表-vmes_dictionary.id)'  type,
+            '厂商名称'  supplier,
+            '所属部门id'  deptId,
+            '采购日期(yyyy-mm-dd)'  buyDate,
+            '备注'  remark,
+            '创建用户id'  cuser,
+            '创建时间'  cdate,
+            '修改用户id'  uuser,
+            '修改时间'  udate,
+            '是否启用(0:已禁用 1:启用)'  isdisable,
+            'id' id_hide
+    </sql>
+     -->
+
+    <!-- 自动创建，可以修改 -->
+    <!--
+    <select id="getColumnList"  resultType="java.util.LinkedHashMap">
+        select
+        <include refid="Column1"></include>
+        from dual
+    </select>
+    -->
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataList"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        vmes_equipment equipment
+        left join vmes_department company on company.id = equipment.company_id
+        left join vmes_department department on department.id = equipment.dept_id
+        left join vmes_dictionary type on equipment.type = type.id
+        <where>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+            <if test="code != null and code != ''">
+                and equipment.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and equipment.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="spec != null and spec != ''">
+                and equipment.spec LIKE CONCAT(CONCAT('%', #{spec}),'%')
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and type.name LIKE CONCAT(CONCAT('%', #{typeName}),'%')
+            </if>
+            <if test="supplier != null and supplier != ''">
+                and equipment.supplier LIKE CONCAT(CONCAT('%', #{supplier}),'%')
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and department.name LIKE CONCAT(CONCAT('%', #{deptName}),'%')
+            </if>
+            <if test="isdisable!= null and isdisable != ''">
+                and equipment.isdisable = #{isdisable}
+            </if>
+            <if test="currentCompanyId != null and currentCompanyId != ''" >
+                and equipment.company_id=#{currentCompanyId}
+            </if>
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+    <!-- 自动创建，可以修改 -->
+    <select id="getDataListPage"  parameterType="com.yvan.PageData"  resultType="java.util.Map">
+        select
+        <include refid="Field1"></include>
+        from
+        vmes_equipment equipment
+        left join vmes_department company on company.id = equipment.company_id
+        left join vmes_department department on department.id = equipment.dept_id
+        left join vmes_dictionary type on equipment.type = type.id
+
+        left join vmes_user cuser on equipment.cuser = cuser.id
+        left join vmes_department dept on dept.id = cuser.dept_id
+
+        <where>
+
+
+            <if test='dataType != null and dataType == "0"'>
+                and cuser.id = #{currentUserId}
+            </if>
+            <if test='dataType != null and dataType == "1"'>
+                and dept.id_${deptLayer} = #{deptRId}
+            </if>
+
+
+            <if test="currentCompanyId != null and currentCompanyId != ''" >
+                and equipment.company_id=#{currentCompanyId}
+            </if>
+            <if test="equipmentId != null and equipmentId != ''">
+                and equipment.id = #{equipmentId}
+            </if>
+            <if test="code != null and code != ''">
+                and equipment.code LIKE CONCAT(CONCAT('%', #{code}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and equipment.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+            </if>
+            <if test="spec != null and spec != ''">
+                and equipment.spec LIKE CONCAT(CONCAT('%', #{spec}),'%')
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and type.name LIKE CONCAT(CONCAT('%', #{typeName}),'%')
+            </if>
+            <if test="supplier != null and supplier != ''">
+                and equipment.supplier LIKE CONCAT(CONCAT('%', #{supplier}),'%')
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and department.name LIKE CONCAT(CONCAT('%', #{deptName}),'%')
+            </if>
+            <if test="isdisable!= null and isdisable != ''">
+                and equipment.isdisable = #{isdisable}
+            </if>
+            <if test="pid!= null and pid != '' and layer != null"><!-- 关键词检索 -->
+                and department.id_${layer} = #{pid}
+            </if>
+            <!--queryStr 自定义sql查询语句-->
+            <if test="queryStr != null and queryStr != ''" >
+                and ${queryStr}
+            </if>
+
+        </where>
+        <if test="orderStr != null and orderStr != ''" >
+            order by ${orderStr}
+        </if>
+    </select>
+
+
+    <!-- 部门表 + 设备表 -->
+    <select id="listDepartmentEquipment" parameterType="com.yvan.PageData" resultType="java.util.Map">
+        select
+            id,
+            pid,
+            isdisable,
+            name,
+            name deptName,
+            '' eqptName,
+            layer,
+            serial_number serialNumber,
+            'dept' type
+        from vmes_department
+        <where>
+            <if test="deptDisable!= null and deptDisable != ''">
+                and isdisable = #{deptDisable}
+            </if>
+            <if test="deptQuery != null and deptQuery != ''" >
+                and ${deptQuery}
+            </if>
+        </where>
+        UNION ALL
+        select
+            a.id,
+            a.dept_id as pid,
+            a.isdisable,
+            a.name,
+            b.name deptName,
+            a.name eqptName,
+            null layer,
+            0 serialNumber,
+            'eqpt' type
+        from vmes_equipment a
+            left join vmes_department b on a.dept_id = b.id
+        <where>
+            <if test="eqptQuery != null and eqptQuery != ''" >
+                and ${eqptQuery}
+            </if>
+            <if test="eqptDisable!= null and eqptDisable != ''">
+                and a.isdisable = #{eqptDisable}
+            </if>
+            and a.dept_id is not null
+        </where>
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,6 @@
+rootProject.name = 'vmes'
+
+include "yvan-platform"
+
+include "vmes-server"
+include "vmes-contracts"

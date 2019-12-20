@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+    }
+    ext {
+        springBootVersion = '1.5.16.RELEASE'
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'org.springframework.boot'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    mainClassName = System.getProperty("starter")?:'com.xy.vmes.StartMain'
+
+    buildscript {
+        repositories {
+            maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        }
+    }
+}
