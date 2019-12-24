@@ -18,6 +18,10 @@ spring:
     username: root
     password: agrvqL$D
 
+#    url: jdbc:mysql://gz-cdb-dflqgz3d.sql.tencentcdb.com:60601/deecoop_shop?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true
+#    username: servicebio_shop
+#    password: servicebio_shop
+
   redis:
     key_prefix: vmes
     host: 47.92.1.209

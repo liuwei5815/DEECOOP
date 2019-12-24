@@ -1,6 +1,6 @@
 package ${classPath};
 
-import com.xy.vmes.service.${objectName}Service;
+import com.xy.vmes.${projectName}.service.${objectName}Service;
 import com.xy.vmes.entity.${objectName};
 
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;

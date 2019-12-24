@@ -14,22 +14,21 @@ public class CreateCodeUtil {
 
         PageData pd = new PageData();
         //模块编码
-        String modelCode = "FinanceInvoice";
-        String objectName = "FinanceInvoice";//类名
-        String tableName = "vmes_finance_invoice";//表名
-        String title = "vmes_finance_invoice:销售开票";
+        String modelCode = "ShopUser";
+        String objectName = "ShopUser";//类名
+        String tableName = "vmes_shop_user";//表名
+        String title = "vmes_shop_user:商城平台用户管理";
         String author = "刘威";
         String rootName = "deecoop";
-        String moduleName = "finance";
+        String moduleName = "shop";
         String projectName = rootName+"."+moduleName;//项目名
 
-
         pd.put("dbtype","mysql");//数据库类型
-        pd.put("username","root");//用户名
-        pd.put("password","agrvqL$D");//密码
-        pd.put("dbAddress","47.92.1.209");//数据库连接地址
-        pd.put("dbport","3306");//端口
-        pd.put("databaseName","deecoop");//数据库名
+        pd.put("username","servicebio_shop");//用户名
+        pd.put("password","servicebio_shop");//密码
+        pd.put("dbAddress","gz-cdb-dflqgz3d.sql.tencentcdb.com");//数据库连接地址
+        pd.put("dbport","60601");//端口
+        pd.put("databaseName","deecoop_shop");//数据库名
         pd.put("table",tableName);//表名
         List<String[]> fieldList = DbFH.getColumnParameterLsit(DbFH.getFHCon(pd),pd.getString("table"),pd.getString("databaseName")); //读取字段信息
 
@@ -74,8 +73,8 @@ public class CreateCodeUtil {
         Freemarker.printFile("mapperMysqlTemplate.ftl", root, filePath, ftlPath);
 
         //生成Service java
-        root.put("classPath", "com.xy.vmes.serviceImp");
-        filePath = path+"vmes-contracts/src/main/java/com/xy/vmes/serviceImp/"+objectName+"Service.java";
+        root.put("classPath", "com.xy.vmes."+projectName+".service");
+        filePath = path+"vmes-server/src/main/java/com/xy/vmes/"+projectName.replace(".","/")+"/service/"+objectName+"Service.java";
         Freemarker.printFile("serviceJavaTemplate.ftl", root, filePath, ftlPath);
 
         //生成ServiceImp java

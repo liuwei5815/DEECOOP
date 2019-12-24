@@ -58,6 +58,8 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-amqp'
 
+    compile 'com.github.qcloudsms:qcloudsms:1.0.5'
+
 }
 
 artifacts {

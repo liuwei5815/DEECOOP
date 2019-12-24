@@ -142,7 +142,7 @@ public class ComonFilter implements Filter {
      * 根据userID-获取Redis缓存中的会话ID(Uuid)
      * (手机端)Redis缓存Key:   (uuid:用户ID:企业ID:deecoop:userLoginMap:app)
      * (web端)Redis缓存Key:   (uuid:用户ID:企业ID:deecoop:userLoginMap:web)
-     *
+     * (商城)Redis缓存Key:   (uuid:商城用户ID:企业ID:deecoop:userLoginMap:shop)
      */
     public boolean checkSession(HttpServletRequest httpRequest) {
         //1. 客户端-获取历史sessionID
@@ -155,6 +155,8 @@ public class ComonFilter implements Filter {
                 loginType = "app";
             } else if (sessionID.lastIndexOf("web") != -1) {
                 loginType = "web";
+            }else if (sessionID.lastIndexOf("shop") != -1) {
+                loginType = "shop";
             }
         }
 

@@ -67,8 +67,8 @@
             b.column_1 as employColumn1,
             b.column_2 as employColumn2,
             b.column_3 as employColumn3
-        from deecoop.vmes_user a
-            left join deecoop.vmes_employee b on a.employ_id = b.id
+        from vmes_user a
+            left join vmes_employee b on a.employ_id = b.id
         <choose>
             <when test="(mapSize == null || mapSize == 0) and 'true' != isQueryAll ">
                 where 1=2
